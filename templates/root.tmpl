@@ -1,0 +1,17 @@
+<html>
+  <head>
+    {{- range .Headers -}}
+      {{- if eq .Type "title" -}}
+        {{"\n      "}}<title>{{ .Value }}</title>
+      {{- end -}}
+      {{- if eq .Type "css" -}}
+        {{"\n      "}}<link rel="stylesheet" href="/public/css/{{ .Value }}">
+      {{- end -}}
+    {{- end}}
+  </head>
+  <body>
+    <div class="main-container">
+      {{.Content}}
+    </div>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+body {
+  background-color: orange;
+}
+
+.main-container {
+  max-width: 1000px;
+  box-sizing: border-box;
+  
+  margin: auto;
+  padding: 1rem;
+
+  background-color: white;
+  border-radius: 5px;
+}
