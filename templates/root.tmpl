@@ -5,7 +5,7 @@
         {{"\n      "}}<title>{{ .Value }}</title>
       {{- end -}}
       {{- if eq .Type "css" -}}
-        {{"\n      "}}<link rel="stylesheet" href="/public/css/{{ .Value }}">
+        {{"\n      "}}<link rel="stylesheet" href="{{ .Value }}">
       {{- end -}}
     {{- end}}
   </head>
