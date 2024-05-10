@@ -7,6 +7,9 @@
       {{- if eq .Type "css" -}}
         {{"\n      "}}<link rel="stylesheet" href="{{ .Value }}">
       {{- end -}}
+      {{- if eq .Type "js" -}}
+        {{"\n      "}}<script src="{{ .Value }}"></script>
+      {{- end -}}
     {{- end}}
   </head>
   <body>
