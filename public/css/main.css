@@ -16,3 +16,28 @@ body {
 h1 {
   text-align: center;
 }
+
+.folding-section-header {
+  background-color: orange;
+  padding: .5rem;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+}
+.folding-section-header div {
+  align-self: center;
+}
+
+.folding-section-header-icon {
+  font-family: "Font Awesome 6 Free";
+}
+
+.closed .folding-section-header-icon::after {
+  content: "\2b";
+}
+
+.open .folding-section-header-icon::after {
+  content: "\f068";
+}
