@@ -1,0 +1,7 @@
+CREATE TABLE categories (
+  id INT UNSIGNED AUTO_INCREMENT,
+  foreground VARCHAR(32) NOT NULL DEFAULT "black",
+  background VARCHAR(32) NOT NULL DEFAULT "gray",
+  ordering INT UNSIGNED,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB CHARSET=utf8mb4;
