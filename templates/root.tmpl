@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
   <head>
     {{- range .Headers -}}
@@ -11,6 +12,11 @@
         {{"\n      "}}<script src="{{ .Value }}"></script>
       {{- end -}}
     {{- end}}
+    <script>
+      let page_info = {
+        lang: "{{ .Lang }}"
+      }
+    </script>
   </head>
   <body>
     <div class="main-container">
