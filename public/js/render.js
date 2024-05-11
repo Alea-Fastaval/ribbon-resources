@@ -3,7 +3,7 @@
 class Render {
   
   static foldingSection(header_text, content) {
-    content ??= "";
+    
 
     let section = $(`<div class="folding-section open"></div>`);
     
@@ -16,12 +16,17 @@ class Render {
     let header_icon = $(`<div class="folding-section-header-icon"></div>`);
     header_element.append(header_icon);
 
-    let content_wrapper = $(`<div class="folding-section-content">${content}</div>"`);
-    section.append(content_wrapper);
+    if (content instanceof jQuery) {
+      content.addClass("folding-section-content")
+    } else {
+      content ??= "";
+      content = $(`<div class="folding-section-content">${content}</div>"`);
+    }
+    section.append(content);
 
     header_element.on("click", () => {
-      content_wrapper.toggle()
-      if (content_wrapper.is(":visible")) {
+      content.toggle()
+      if (content.is(":visible")) {
         section.addClass("open");
         section.removeClass("closed");
       } else {
