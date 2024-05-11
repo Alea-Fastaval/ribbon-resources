@@ -1,5 +1,5 @@
 body {
-  background-color: orange;
+  background-color: var(--body-background);
 }
 
 .main-container {
@@ -9,7 +9,7 @@ body {
   margin: auto;
   padding: 1rem;
 
-  background-color: white;
+  background-color: var(--content-background);
   border-radius: 5px;
 }
 
@@ -17,8 +17,9 @@ h1 {
   text-align: center;
 }
 
-.folding-section-header {
-  background-color: orange;
+.folding-section-header,
+.category {
+  background-color: var(--highlight-color);
   padding: .5rem;
   border-radius: 5px;
   font-size: 1.2rem;
@@ -26,6 +27,7 @@ h1 {
   display: flex;
   justify-content: space-between;
 }
+
 .folding-section-header div {
   align-self: center;
 }
@@ -40,4 +42,9 @@ h1 {
 
 .open .folding-section-header-icon::after {
   content: "\f068";
+}
+
+.category {
+  margin-top: 1rem;
+  margin-left: 1rem;
 }
