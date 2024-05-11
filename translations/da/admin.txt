@@ -1,1 +1,3 @@
 headline Administration af sildemaskine
+categories Kategorier
+new_category Opret ny kategori
