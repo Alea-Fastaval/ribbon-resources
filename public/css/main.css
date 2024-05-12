@@ -10,7 +10,7 @@ body {
   padding: 1rem;
 
   background-color: var(--content-background);
-  border-radius: 5px;
+  border-radius: var(--rounding);
 }
 
 h1 {
@@ -21,7 +21,7 @@ h1 {
 .category {
   background-color: var(--highlight-color);
   padding: .5rem;
-  border-radius: 5px;
+  border-radius: var(--rounding);
   font-size: 1.2rem;
   font-weight: bold;
   display: flex;
