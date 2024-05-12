@@ -3,8 +3,6 @@
 class Render {
   
   static foldingSection(header_text, content) {
-    
-
     let section = $(`<div class="folding-section open"></div>`);
     
     let header_element = $(`<div class="folding-section-header"></div>`);
@@ -76,20 +74,42 @@ class Render {
     dialog.append(dialog_footer);
 
     let gt = Admin.translations.general;
-    let ok_button = $(`<div class="dialog-button">${gt.ok}</div>`);
+    let ok_button = $(`<div class="dialog-button" tabindex="0">${gt.ok}</div>`);
     dialog_footer.append(ok_button);
 
-    let cancel_button = $(`<div class="dialog-button">${gt.cancel}</div>`);
+    let cancel_button = $(`<div class="dialog-button" tabindex="0">${gt.cancel}</div>`);
     dialog_footer.append(cancel_button);
 
     dialog_close_icon.on('click', () => {dialog_wrapper.close()})
-    cancel_button.on('click', () => {dialog_wrapper.close()})
+    cancel_button.on('click keydown', (evt) => {
+      // Only capture Enter and Space
+      if (evt.type == 'keydown' && evt.which !== 13 && evt.which != 32) return;
 
-    ok_button.on('click', () => {
+      dialog_wrapper.close()}
+    )
+
+    ok_button.on('click keydown', (evt) => {
+      // Only capture Enter and Space
+      if (evt.type == 'keydown' && evt.which !== 13 && evt.which != 32) return;
+
       dialog_wrapper.close();
       callback(content)
     })
 
     return dialog_wrapper
+  }
+
+  static category(info) {
+    let new_category = Render.foldingSection(info.name, info.content);
+    let header = new_category.find(".folding-section-header");
+    header.css({
+      "background-color": info.Background,
+      "--stripes-color": info.Stripes,
+      "color": info.Glyph,
+    })
+
+    new_category.addClass('category');
+
+    return new_category;
   }
 }
