@@ -1,3 +1,7 @@
 headline Administration af sildemaskine
 categories Kategorier
 new_category Opret ny kategori
+name_da Dansk navn
+name_en Engelsk navn
+foreground_color Forgrundsfarve
+background_color Baggrundsfarve

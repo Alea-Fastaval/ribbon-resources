@@ -1,1 +1,3 @@
 headline Velkommen til Fastavals sildemaskine
+ok OK
+cancel Anullér
