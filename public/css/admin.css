@@ -1,0 +1,82 @@
+.dialog-wrapper.closed {
+  display: none;
+}
+
+.dialog-wrapper.open {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #00000080;
+}
+
+.dialog {
+  position: absolute;
+  
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  -ms-transform: translateY(-50%) translateX(-50%);
+}
+
+.dialog-header,
+.dialog-content,
+.dialog-footer {
+  padding: .5rem;
+}
+
+.dialog-header {
+  background-color: var(--highlight-color);
+
+  border-top-left-radius: var(--rounding);
+  border-top-right-radius: var(--rounding);
+}
+
+.dialog-content {
+  background-color: var(--content-background);
+}
+
+.dialog-fieldlist {
+  padding: 1rem .5rem;
+
+  display: grid;
+  align-items: center;
+
+  grid-template-rows: auto auto auto;
+  row-gap: .5rem;
+  column-gap: .5rem;
+}
+
+.dialog-field-label {
+  grid-column-start: 1;
+}
+
+.dialog-field.col2 {
+  grid-column-start: 2;
+}
+
+.dialog-field.col3 {
+  grid-column-start: 3;
+}
+
+.dialog-footer {
+  background-color: var(--highlight-color);
+
+  border-bottom-left-radius: var(--rounding);
+  border-bottom-right-radius: var(--rounding);
+
+  display: flex;
+  flex-direction: row-reverse;
+  column-gap: .5rem;
+}
+
+.button,
+.dialog-button {
+  cursor: pointer;
+}
+
+.dialog-button {
+  background-color: var(--content-background);
+  padding: .25rem .5rem;
+}

@@ -37,4 +37,59 @@ class Render {
 
     return section
   }
+
+  static dialog(title, content, callback) {
+    let dialog_wrapper = $('<div class="dialog-wrapper closed"></div>');
+
+    dialog_wrapper.open = function() {
+      dialog_wrapper.removeClass('closed');
+      dialog_wrapper.addClass('open');
+    }
+
+    dialog_wrapper.close = function() {
+      dialog_wrapper.removeClass('open');
+      dialog_wrapper.addClass('closed');
+    }
+
+    let dialog = $('<div class="dialog"></div>');
+    dialog_wrapper.append(dialog);
+
+    let dialog_header = $(`
+      <div class="dialog-header">
+        <div class="dialog-title">${title}</div>
+      </div>
+    `);
+    dialog.append(dialog_header);
+
+    let dialog_close_icon = $('<div class="dialog-close-icon"></div>');
+    dialog_header.append(dialog_close_icon);
+
+    if (content instanceof jQuery) {
+      content.addClass('dialog-content')
+    } else {
+      content ??= "";
+      content = $(`<div class="dialog-content">${content}</div>"`);
+    }
+    dialog.append(content);
+
+    let dialog_footer = $('<div class="dialog-footer"></div>');
+    dialog.append(dialog_footer);
+
+    let gt = Admin.translations.general;
+    let ok_button = $(`<div class="dialog-button">${gt.ok}</div>`);
+    dialog_footer.append(ok_button);
+
+    let cancel_button = $(`<div class="dialog-button">${gt.cancel}</div>`);
+    dialog_footer.append(cancel_button);
+
+    dialog_close_icon.on('click', () => {dialog_wrapper.close()})
+    cancel_button.on('click', () => {dialog_wrapper.close()})
+
+    ok_button.on('click', () => {
+      dialog_wrapper.close();
+      callback(content)
+    })
+
+    return dialog_wrapper
+  }
 }
