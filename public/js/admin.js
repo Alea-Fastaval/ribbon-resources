@@ -18,6 +18,12 @@ $(function() {
       object: Admin.translations,
       field: "general",
     },
+    category_translations: {
+      url: `/api/translations/${page_info.lang}/categories*`,
+      object: Admin.translations,
+      field: "categories",
+      data_field: "categories",
+    },
     languages: {
       url: "api/translations/languages",
       object: Admin.translations,
@@ -39,7 +45,13 @@ $(function() {
     $.ajax({
       url: need_loading[key].url,
       success: function(data, status) {
-        object[field] = data;
+        let data_field = need_loading[key].data_field
+        if (data_field === undefined) {
+          object[field] = data;
+        } else {
+          object[field] = data[data_field];
+        }
+        
         resource_loaded(key);
       }
     }) 
@@ -56,13 +68,16 @@ class Admin {
 
     let main_element = $(".main-container");
 
-    let categories_content = $("<div></div>")
+    Admin.categories_content = $("<div></div>")
 
-    let categories_element = Render.foldingSection(pt.categories, categories_content);
+    let categories_element = Render.foldingSection(pt.categories, Admin.categories_content);
     main_element.append(categories_element);
 
+    //-------------------------------------------
+    // New Category
+    //-------------------------------------------
     let new_category_button = $(`<div class="dummy-category category button" style="background-color: var(--highlight-color)">${pt.new_category}</div>`)
-    categories_content.append(new_category_button)
+    Admin.categories_content.append(new_category_button)
 
     let category_dialog_content = $('<div></div>');
     let field_list = $('<div class="dialog-fieldlist"></div>');
@@ -85,13 +100,40 @@ class Admin {
       picker.on('change', () => {
         text_input.val(picker.val());
       });
+
+      text_input.on('change', () => {
+        picker.css('color', text_input.val());
+        let colorstring = getComputedStyle(picker[0]).color;
+        let match = colorstring.match(/rgb\((\d+), (\d+), (\d+)\)/);
+        let number = (parseInt(match[1]) * 256 + parseInt(match[2])) * 256 + parseInt(match[3]);
+        colorstring = "#" + number.toString(16).padStart(6, "0");
+        picker.val(colorstring);
+      })
     }
 
     color_input('background', field_list);
-    color_input('foreground', field_list);
+    color_input('stripes', field_list);
+    color_input('glyph', field_list);
 
     function submit_new_category(content) {
+      let data = {};
+      
+      let inputs = content.find('input');
+      inputs.each((i, input)=> {
+        data[$(input).attr('name')] = $(input).val()
+      });
 
+      let name = data["name_"+page_info.lang];
+
+      $.ajax({
+        url: '/api/categories',
+        method: 'POST',
+        data,
+        success: function(data, status) {
+          data.name = name;
+          Admin.add_category(data);
+        }
+      })   
     }
 
     let category_dialog = Render.dialog(pt.new_category, category_dialog_content, submit_new_category);
@@ -100,5 +142,18 @@ class Admin {
     new_category_button.on('click', () => {
       category_dialog.open();
     })
+
+    //-------------------------------------------
+    // Render Categories
+    //-------------------------------------------
+    for (let category of Admin.categories) {
+      category.name = Admin.translations.categories[category.ID]
+      Admin.add_category(category);
+    }
+  }
+
+  static add_category(data) {
+    let new_category = Render.category(data);
+    Admin.categories_content.append(new_category);
   }
 }
