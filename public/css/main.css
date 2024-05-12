@@ -18,7 +18,7 @@ h1 {
 }
 
 .folding-section-header,
-.category {
+.dummy-category {
   background-color: var(--highlight-color);
   padding: .5rem;
   border-radius: var(--rounding);
@@ -26,6 +26,11 @@ h1 {
   font-weight: bold;
   display: flex;
   justify-content: space-between;
+}
+
+.category > .folding-section-header {
+  border-left: var(--stripes-color) .75rem solid;
+  border-right: var(--stripes-color) .75rem solid;
 }
 
 .folding-section-header div {
@@ -36,11 +41,11 @@ h1 {
   font-family: "Font Awesome 6 Free";
 }
 
-.closed .folding-section-header-icon::after {
+.closed > div > .folding-section-header-icon::after {
   content: "\2b";
 }
 
-.open .folding-section-header-icon::after {
+.open > div > .folding-section-header-icon::after {
   content: "\f068";
 }
 
