@@ -2,8 +2,8 @@
 
 class Render {
   
-  static foldingSection(header_text, content) {
-    let section = $(`<div class="folding-section open"></div>`);
+  static foldingSection(header_text, content, default_state = "open") {
+    let section = $(`<div class="folding-section ${default_state}"></div>`);
     
     let header_element = $(`<div class="folding-section-header"></div>`);
     section.append(header_element);
@@ -21,6 +21,10 @@ class Render {
       content = $(`<div class="folding-section-content">${content}</div>"`);
     }
     section.append(content);
+
+    if (default_state === "closed") {
+      content.hide();
+    }
 
     header_element.on("click", () => {
       content.toggle()

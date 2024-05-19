@@ -68,9 +68,11 @@ class Admin {
 
     let main_element = $(".main-container");
 
+    //-------------------------------------------
+    // Categories Section
+    //-------------------------------------------
     Admin.categories_content = $("<div></div>")
-
-    let categories_element = Render.foldingSection(pt.categories, Admin.categories_content);
+    let categories_element = Render.foldingSection(pt.categories, Admin.categories_content, 'closed');
     main_element.append(categories_element);
 
     //-------------------------------------------
