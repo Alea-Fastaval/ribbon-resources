@@ -6,3 +6,6 @@ name_en Engelsk navn
 background_color Baggrundsfarve
 stripes_color Farve på striber
 glyph_color Farve på glyph
+wing1_color Vinger til Hovedansvarlig
+wing2_color Vinger til NK
+glyphs Glyffer

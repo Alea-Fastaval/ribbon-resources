@@ -1,7 +1,10 @@
-CREATE TABLE categories (
-  id INT UNSIGNED AUTO_INCREMENT,
-  foreground VARCHAR(32) NOT NULL DEFAULT "black",
-  background VARCHAR(32) NOT NULL DEFAULT "gray",
-  ordering INT UNSIGNED,
+categories | CREATE TABLE categories (
+  id int unsigned NOT NULL AUTO_INCREMENT,
+  background varchar(32) NOT NULL,
+  stripes varchar(32) NOT NULL,
+  glyph varchar(32) NOT NULL,
+  wing1 varchar(32) NOT NULL,
+  wing2 varchar(32) NOT NULL,
+  ordering int unsigned DEFAULT NULL,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB CHARSET=utf8mb4;

@@ -28,7 +28,12 @@ $(function() {
       url: "api/translations/languages",
       object: Admin.translations,
       field: "languages"
-    }
+    },
+    glyphs: {
+      url: "api/glyphs",
+      object: Admin,
+      field: "glyph_list",
+    },
   }
 
   function resource_loaded(key) {
@@ -116,6 +121,8 @@ class Admin {
     color_input('background', field_list);
     color_input('stripes', field_list);
     color_input('glyph', field_list);
+    color_input('wing1', field_list);
+    color_input('wing2', field_list);
 
     function submit_new_category(content) {
       let data = {};
@@ -152,6 +159,21 @@ class Admin {
       category.name = Admin.translations.categories[category.ID]
       Admin.add_category(category);
     }
+
+    //-------------------------------------------
+    // Glyph Section
+    //-------------------------------------------
+    Admin.glyph_content  = $("<div></div>");
+    let glyph_element = Render.foldingSection(pt.glyphs, Admin.glyph_content, 'closed');
+    main_element.append(glyph_element);
+
+    let glyph_display = $('<div class="glyph-display"></div>');
+    Admin.glyph_content.append(glyph_display);
+
+    for (const glyph_file of Admin.glyph_list) {
+      glyph_display.append(`<div class="image-wrapper"><img src="/public/glyphs/${glyph_file}"/></div>`);
+    }
+
   }
 
   static add_category(data) {
