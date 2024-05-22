@@ -83,7 +83,7 @@ class Admin {
     //-------------------------------------------
     // New Category
     //-------------------------------------------
-    let new_category_button = $(`<div class="dummy-category category button" style="background-color: var(--highlight-color)">${pt.new_category}</div>`)
+    let new_category_button = $(`<div class="dummy-category category button">${pt.new_category}</div>`)
     Admin.categories_content.append(new_category_button)
 
     let category_dialog_content = $('<div></div>');
@@ -166,6 +166,10 @@ class Admin {
     Admin.glyph_content  = $("<div></div>");
     let glyph_element = Render.foldingSection(pt.glyphs, Admin.glyph_content, 'closed');
     main_element.append(glyph_element);
+
+    let new_glyph_button = $(`<div class="dummy-category button">${pt.new_glyph}</div>`)
+    Admin.glyph_content.append(new_glyph_button)
+
 
     let glyph_display = $('<div class="glyph-display"></div>');
     Admin.glyph_content.append(glyph_display);

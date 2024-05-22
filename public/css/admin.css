@@ -72,7 +72,8 @@
 }
 
 .button,
-.dialog-button {
+.dialog-button,
+.folding-section-header {
   cursor: pointer;
 }
 

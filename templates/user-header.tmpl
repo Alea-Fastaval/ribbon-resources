@@ -1,0 +1,8 @@
+<div class="user-header">
+  <div class="user-name">{{ .name }}</div>
+  <div class="logout">
+    <form action="{{ .action }}" method="POST">
+      <input type="submit" name="logout" value="{{ .logout }}" />
+    </form>
+  </div>
+</div>

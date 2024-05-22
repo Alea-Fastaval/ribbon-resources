@@ -9,3 +9,4 @@ glyph_color Farve på glyph
 wing1_color Vinger til Hovedansvarlig
 wing2_color Vinger til NK
 glyphs Glyffer
+new_glyph Upload ny Glyph
