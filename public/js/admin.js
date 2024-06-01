@@ -71,7 +71,7 @@ class Admin {
     let pt = Admin.translations.page;
     let gt = Admin.translations.general;
 
-    let main_element = $(".main-container");
+    let main_element = $(".main-content");
 
     //-------------------------------------------
     // Categories Section

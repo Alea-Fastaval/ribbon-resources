@@ -53,3 +53,13 @@ h1 {
 .category {
   margin-left: 1rem;
 }
+
+#fastaval-logo {
+  display: block;
+
+  width: 150px;
+  height: 150px;
+
+  margin: auto;
+  margin-top: 5rem;
+}
