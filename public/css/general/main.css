@@ -50,8 +50,8 @@ h1 {
   content: "\f068";
 }
 
-.category {
-  margin-left: 1rem;
+.folding-section-content {
+  margin: 0 1rem;
 }
 
 #fastaval-logo {

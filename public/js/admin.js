@@ -90,6 +90,7 @@ class Admin {
     let field_list = $('<div class="dialog-fieldlist"></div>');
     category_dialog_content.append(field_list);
 
+    // Ribbon name for each language
     for (const lang of Admin.translations.languages) {
       field_list.append(`<label class="dialog-field-label" for="category-name-${lang}">${pt['name_'+lang]}:</label>`);
       field_list.append(`<input class="dialog-field col2" id="category-name-${lang}" name="name_${lang}" type="text">`);
@@ -167,9 +168,38 @@ class Admin {
     let glyph_element = Render.foldingSection(pt.glyphs, Admin.glyph_content, 'closed');
     main_element.append(glyph_element);
 
-    let new_glyph_button = $(`<div class="dummy-category button">${pt.new_glyph}</div>`)
-    Admin.glyph_content.append(new_glyph_button)
+    let new_glyph_button = $(`<div class="button action-button">${pt.new_glyph}</div>`);
+    Admin.glyph_content.append(new_glyph_button);
 
+    let glyph_dialog_content = $(`<div></div>`);
+    glyph_dialog_content.append(`<label for="glyph-file">${pt.select_glyph}:</label>`);
+
+    let glyph_file_input = $(`<input id="glyph-file" name="glyph_file" type="file" accept=".svg"/>`);
+    glyph_dialog_content.append(glyph_file_input);
+
+    let glyph_preprocess_section = $(`<div id="glyph-preprocess-section"></div>`);
+    glyph_dialog_content.append(glyph_preprocess_section);
+
+    // Process SVG file
+    glyph_file_input.on('change', () => {
+      glyph_preprocess_section.html('')
+      glyph_file_input.prop('files')[0].text().then((glyph_file_content) => {
+        Admin.processSVG(glyph_file_content, glyph_preprocess_section);
+      }, () => {
+        alert(pt.read_glyph_error + "/n" + glyph_file_input.prop('files')[0].name);
+      })
+    });
+
+    function submit_new_glyph() {
+
+    }
+
+    let glyph_dialog = Render.dialog(pt.new_glyph, glyph_dialog_content, submit_new_glyph);
+    main_element.append(glyph_dialog);
+
+    new_glyph_button.on('click', () => {
+      glyph_dialog.open();
+    })
 
     let glyph_display = $('<div class="glyph-display"></div>');
     Admin.glyph_content.append(glyph_display);
@@ -183,5 +213,89 @@ class Admin {
   static add_category(data) {
     let new_category = Render.category(data);
     Admin.categories_content.append(new_category);
+  }
+
+  static processSVG(glyph_content, element) {
+    element.html('');
+
+    let preview = $(`<div class="image-wrapper"></div>`);
+    preview.css({
+      "--glyph-foreground-color": "white",
+      "--glyph-background-color": "black",
+      "--glyph-highlight-color": "blue",
+    })
+    element.append(preview);
+
+    preview.append(glyph_content);
+
+    let selections = []
+    let rule_types = [
+      "fill",
+      "stroke",
+    ]
+
+    let rules = preview.find("svg style")[0].sheet.rules;
+    for (let i = 0; i < rules.length; i++) {
+      for (const type of rule_types) {
+        if (rules[i].style[type] != "" && rules[i].style[type] != "none") {
+          rules[i].style[type] = "var(--glyph-foreground-color)"
+
+          selections.push({
+            index: i,
+            type,
+            name: rules[i].selectorText + " " + type,
+          }) 
+        }
+      }
+    }
+
+    let pt = Admin.translations.page
+    if (selections.length == 0) {
+      alert(pt.glyph_elements_error);
+    }
+
+    let selections_table = $('<table class="glyph-element-selection"></table>');
+    element.append(selections_table)
+
+    selections_table.append(`<tr><th>${pt.element}</th><th>${pt.foreground}</th><th>${pt.background}</th></tr>`);
+    for (const select of selections) {
+      let selection_row = $(`<tr class="glyph-element-selction-row" data-rule-index="${select.index}" data-rule-type="${select.type}">
+        <td>${select.name}</td>
+      </tr>`)
+
+      let select_foreground = $(`<input type="radio" name="selector-${select.index}-${select.type}-color" value="foreground" checked>`);
+      let select_cell_f = $('<td></td>');
+      select_cell_f.append(select_foreground)
+      selection_row.append(select_cell_f)
+
+      let select_background = $(`<input type="radio" name="selector-${select.index}-${select.type}-color" value="background">`);
+      let select_cell_b = $('<td></td>');
+      select_cell_b.append(select_background)
+      selection_row.append(select_cell_b)
+
+      selections_table.append(selection_row)
+
+      selection_row.on('mouseenter', () => {
+        rules[select.index].style[select.type] = "var(--glyph-highlight-color)";
+        selection_row.css('background-color', "var(--highlight-color)");
+      })
+
+      selection_row.on('mouseleave', () => {
+        let selection = selection_row.find('input:checked').val()
+        rules[select.index].style[select.type] = `var(--glyph-${selection}-color)`;
+        selection_row.css('background-color', "");
+      })
+
+      function update_color_select(evt) {
+        let input = $(evt.target);
+        if (!input.prop('checked')) return;
+
+        let selection = input.val()
+        rules[select.index].style[select.type] = `var(--glyph-${selection}-color)`;
+      }
+
+      select_background.on('change', update_color_select)
+      select_foreground.on('change', update_color_select)
+    }
   }
 }

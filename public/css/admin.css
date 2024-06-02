@@ -1,3 +1,17 @@
+.action-button {
+  display: inline-block;
+
+  margin-bottom: 1rem;
+
+  padding: .5rem 1rem;
+
+  font-size: 1.2rem;
+  font-weight: bold;
+
+  background-color: var(--highlight-color);
+  border-radius: var(--rounding);
+}
+
 .dialog-wrapper.closed {
   display: none;
 }
@@ -89,7 +103,8 @@
   gap: .5rem;
 }
 
-.glyph-display .image-wrapper {
+.glyph-display .image-wrapper,
+#glyph-preprocess-section .image-wrapper {
   width: 100%;
   height: 100%;
 
@@ -111,4 +126,22 @@
 
 .glyph-display img {
   margin: .5rem;
+}
+
+#glyph-preprocess-section svg {
+  margin: 1rem;
+}
+
+#glyph-preprocess-section {
+  margin-top: 1rem;
+}
+
+#glyph-preprocess-section table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.glyph-element-selection td input {
+  display: block;
+  margin: auto;
 }
