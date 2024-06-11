@@ -29,11 +29,6 @@ $(function() {
       object: Admin.translations,
       field: "languages"
     },
-    glyphs: {
-      url: "api/glyphs",
-      object: Admin,
-      field: "glyph_list",
-    },
   }
 
   function resource_loaded(key) {
@@ -190,8 +185,42 @@ class Admin {
       })
     });
 
-    function submit_new_glyph() {
+    // Submit glyph
+    function submit_new_glyph(content) {
+      let selection_rows = content.find(".glyph-element-selection-row");
+      selection_rows.trigger("moseleave");
 
+      // Update style in DOM
+      let wrapper = content.find(".image-wrapper")
+      let style = wrapper.find("svg style")
+      let rules = style[0].sheet.cssRules
+      
+      let styletext = "";
+      for (let i = 0; i < rules.length; i++) {
+        styletext += rules[i].cssText
+      }
+      style.text(styletext);
+
+      let svg = wrapper.html()
+      let glyph_file_input = content.find('input[type=file]')
+      let name = glyph_file_input.prop('files')[0].name
+
+      // Upload glyph
+      $.ajax({
+        url: '/api/glyphs',
+        method: 'POST',
+        data: {
+          name,
+          svg
+        },
+        success: function(data, status) {
+          if (data.status == "error") {
+            alert(Admin.translations.page.glyph_upload_error)
+            return;
+          }
+          Admin.load_glyphs();
+        }
+      })   
     }
 
     let glyph_dialog = Render.dialog(pt.new_glyph, glyph_dialog_content, submit_new_glyph);
@@ -204,10 +233,7 @@ class Admin {
     let glyph_display = $('<div class="glyph-display"></div>');
     Admin.glyph_content.append(glyph_display);
 
-    for (const glyph_file of Admin.glyph_list) {
-      glyph_display.append(`<div class="image-wrapper"><img src="/public/glyphs/${glyph_file}"/></div>`);
-    }
-
+    Admin.load_glyphs();
   }
 
   static add_category(data) {
@@ -215,15 +241,29 @@ class Admin {
     Admin.categories_content.append(new_category);
   }
 
+  static load_glyphs() {
+    function render_glyphs() {
+      let glyph_display = Admin.glyph_content.find(".glyph-display");
+      glyph_display.html("")
+
+      for (const glyph_file of Admin.glyph_list) {
+        glyph_display.append(`<div class="image-wrapper"><img src="/api/glyphs/${glyph_file}"/></div>`);
+      }
+    }
+
+    $.ajax({
+      url: "api/glyphs",
+      success: function(data, status) {
+        Admin.glyph_list = data
+        render_glyphs()
+      }
+    })
+  }
+
   static processSVG(glyph_content, element) {
     element.html('');
 
     let preview = $(`<div class="image-wrapper"></div>`);
-    preview.css({
-      "--glyph-foreground-color": "white",
-      "--glyph-background-color": "black",
-      "--glyph-highlight-color": "blue",
-    })
     element.append(preview);
 
     preview.append(glyph_content);
@@ -259,7 +299,7 @@ class Admin {
 
     selections_table.append(`<tr><th>${pt.element}</th><th>${pt.foreground}</th><th>${pt.background}</th></tr>`);
     for (const select of selections) {
-      let selection_row = $(`<tr class="glyph-element-selction-row" data-rule-index="${select.index}" data-rule-type="${select.type}">
+      let selection_row = $(`<tr class="glyph-element-selection-row" data-rule-index="${select.index}" data-rule-type="${select.type}">
         <td>${select.name}</td>
       </tr>`)
 

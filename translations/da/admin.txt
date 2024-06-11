@@ -12,7 +12,8 @@ glyphs Glyffer
 new_glyph Upload ny Glyph
 select_glyph Vælg en SVG-fil
 read_glyph_error Kunne ikke læse indholdet af glyph filen
-glyph_elements_error Kunne ikke parse elemnterne i glyphen
+glyph_elements_error Kunne ikke parse elementerne i glyphen
 element Element
 foreground Forgrund
 background Baggrund
+glyph_upload_error Glyphen kunne ikke uploades
