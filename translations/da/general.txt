@@ -8,3 +8,5 @@ login Log Ind
 logout Log Ud
 no_access_headline Ingen Adgang
 no_access_message Du har ikke adgang til denne side
+standard_link_text Gå til almindelig side
+admin_link_text Gå til admin side
