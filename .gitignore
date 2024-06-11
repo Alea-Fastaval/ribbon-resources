@@ -1,1 +1,6 @@
 log.txt
+templates/glyphs/*
+sessions/*
+keys/*
+
+!**/.gitkeep
