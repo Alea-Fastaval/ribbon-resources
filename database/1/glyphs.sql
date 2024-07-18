@@ -1,0 +1,5 @@
+CREATE TABLE glyphs (
+  id INT UNSIGNED AUTO_INCREMENT,
+  file_name TEXT NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB CHARSET=utf8mb4;
