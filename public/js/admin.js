@@ -246,8 +246,8 @@ class Admin {
       let glyph_display = Admin.glyph_content.find(".glyph-display");
       glyph_display.html("")
 
-      for (const glyph_file of Admin.glyph_list) {
-        glyph_display.append(`<div class="image-wrapper"><img src="/api/glyphs/${glyph_file}"/></div>`);
+      for (const glyph_id of Object.keys(Admin.glyph_list)) {
+        glyph_display.append(`<div class="image-wrapper"><img src="/api/glyphs/${glyph_id}"/></div>`);
       }
     }
 
