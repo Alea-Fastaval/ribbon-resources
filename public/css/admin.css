@@ -121,6 +121,9 @@
 
 .glyph-display img {
   margin: .5rem;
+  
+  /* width needed on Chrome */
+  max-width: calc(100% - 1rem);
 }
 
 #glyph-preprocess-section .image-wrapper {
