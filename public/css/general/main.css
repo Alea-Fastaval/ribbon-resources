@@ -11,6 +11,8 @@ body {
 
   background-color: var(--content-background);
   border-radius: var(--rounding);
+
+  position: relative;
 }
 
 h1 {
@@ -62,4 +64,12 @@ h1 {
 
   margin: auto;
   margin-top: 5rem;
+}
+
+#signature {
+  position: absolute;
+  top: 100%;
+  right: 0px;
+
+  margin-top: .5em;
 }
