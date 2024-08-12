@@ -38,6 +38,16 @@ $(function() {
     }
   }
 
+  function load_error(key) {
+    let message
+    if (Admin.translations.page != undefined && Admin.translations.page.resource_load_failed != undefined) {
+      message = Admin.translations.page.resource_load_failed.replace("{}", key);
+    } else {
+      message = "Could not load resource: " + key;
+    }
+    alert(message);
+  }
+
   for (const key in need_loading) {
     let object = need_loading[key].object;
     let field = need_loading[key].field;
@@ -45,6 +55,11 @@ $(function() {
     $.ajax({
       url: need_loading[key].url,
       success: function(data, status) {
+        if (data.status == "error") {
+          load_error(key);
+          return;
+        }
+
         let data_field = need_loading[key].data_field
         if (data_field === undefined) {
           object[field] = data;
@@ -53,6 +68,9 @@ $(function() {
         }
         
         resource_loaded(key);
+      },
+      error: function() {
+        load_error(key);
       }
     }) 
   }

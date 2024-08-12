@@ -17,3 +17,4 @@ element Element
 foreground Forgrund
 background Baggrund
 glyph_upload_error Glyphen kunne ikke uploades
+resource_load_failed Kunne ikke hente {} fra serveren
