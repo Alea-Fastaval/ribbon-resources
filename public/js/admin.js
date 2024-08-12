@@ -99,67 +99,9 @@ class Admin {
     let new_category_button = $(`<div class="dummy-category category button">${pt.new_category}</div>`)
     Admin.categories_content.append(new_category_button)
 
-    let category_dialog_content = $('<div></div>');
-    let field_list = $('<div class="dialog-fieldlist"></div>');
-    category_dialog_content.append(field_list);
+    let category_dialog_content = Admin.get_category_dialog_content();
 
-    // Ribbon name for each language
-    for (const lang of Admin.translations.languages) {
-      field_list.append(`<label class="dialog-field-label" for="category-name-${lang}">${pt['name_'+lang]}:</label>`);
-      field_list.append(`<input class="dialog-field col2" id="category-name-${lang}" name="name_${lang}" type="text">`);
-    }
-
-    function color_input(name, element) {
-      element.append(`<label class="dialog-field-label" for="category-${name}">${pt[name+'_color']}:</label>`);
-      
-      let text_input = $(`<input class="dialog-field col2" id="category-${name}" name="${name}_color" type="text">`);
-      element.append(text_input);
-      
-      let picker = $(`<input class="dialog-field col3" id="category-${name}-picker" name="${name}_color_picker" type="color">`);
-      element.append(picker);
-
-      picker.on('change', () => {
-        text_input.val(picker.val());
-      });
-
-      text_input.on('change', () => {
-        picker.css('color', text_input.val());
-        let colorstring = getComputedStyle(picker[0]).color;
-        let match = colorstring.match(/rgb\((\d+), (\d+), (\d+)\)/);
-        let number = (parseInt(match[1]) * 256 + parseInt(match[2])) * 256 + parseInt(match[3]);
-        colorstring = "#" + number.toString(16).padStart(6, "0");
-        picker.val(colorstring);
-      })
-    }
-
-    color_input('background', field_list);
-    color_input('stripes', field_list);
-    color_input('glyph', field_list);
-    color_input('wing1', field_list);
-    color_input('wing2', field_list);
-
-    function submit_new_category(content) {
-      let data = {};
-      
-      let inputs = content.find('input');
-      inputs.each((i, input)=> {
-        data[$(input).attr('name')] = $(input).val()
-      });
-
-      let name = data["name_"+page_info.lang];
-
-      $.ajax({
-        url: '/api/categories',
-        method: 'POST',
-        data,
-        success: function(data, status) {
-          data.name = name;
-          Admin.add_category(data);
-        }
-      })   
-    }
-
-    let category_dialog = Render.dialog(pt.new_category, category_dialog_content, submit_new_category);
+    let category_dialog = Render.dialog(pt.new_category, category_dialog_content, Admin.submit_new_category);
     main_element.append(category_dialog);
 
     new_category_button.on('click', () => {
@@ -171,7 +113,12 @@ class Admin {
     //-------------------------------------------
     for (let category of Admin.categories) {
       category.name = Admin.translations.categories[category.ID]
-      Admin.add_category(category);
+ 
+      let new_category = Render.category(category, 'closed');
+      Admin.categories_content.append(new_category);  
+
+      let new_ribbon_button = $(`<div class="dummy-category category button">${pt.new_ribbon}</div>`)
+      new_category.find(".folding-section-content").prepend(new_ribbon_button)
     }
 
     //-------------------------------------------
@@ -254,9 +201,70 @@ class Admin {
     Admin.load_glyphs();
   }
 
-  static add_category(data) {
-    let new_category = Render.category(data);
-    Admin.categories_content.append(new_category);
+  static get_category_dialog_content() {
+    let pt = Admin.translations.page;
+    
+    let category_dialog_content = $('<div></div>');
+    let field_list = $('<div class="dialog-fieldlist"></div>');
+    category_dialog_content.append(field_list);
+
+    // Category name for each language
+    for (const lang of Admin.translations.languages) {
+      field_list.append(`<label class="dialog-field-label" for="category-name-${lang}">${pt['name_'+lang]}:</label>`);
+      field_list.append(`<input class="dialog-field col2" id="category-name-${lang}" name="name_${lang}" type="text">`);
+    }
+
+    function add_color_input(element, name) {
+      element.append(`<label class="dialog-field-label" for="category-${name}">${pt[name+'_color']}:</label>`);
+      
+      let text_input = $(`<input class="dialog-field col2" id="category-${name}" name="${name}_color" type="text">`);
+      element.append(text_input);
+      
+      let picker = $(`<input class="dialog-field col3" id="category-${name}-picker" name="${name}_color_picker" type="color">`);
+      element.append(picker);
+
+      picker.on('change', () => {
+        text_input.val(picker.val());
+      });
+
+      text_input.on('change', () => {
+        picker.css('color', text_input.val());
+        let colorstring = getComputedStyle(picker[0]).color;
+        let match = colorstring.match(/rgb\((\d+), (\d+), (\d+)\)/);
+        let number = (parseInt(match[1]) * 256 + parseInt(match[2])) * 256 + parseInt(match[3]);
+        colorstring = "#" + number.toString(16).padStart(6, "0");
+        picker.val(colorstring);
+      })
+    }
+
+    add_color_input(field_list, 'background');
+    add_color_input(field_list, 'stripes');
+    add_color_input(field_list, 'glyph');
+    add_color_input(field_list, 'wing1');
+    add_color_input(field_list, 'wing2');
+
+    return category_dialog_content; 
+  }
+
+  static submit_new_category(content) {
+    let data = {};
+    
+    let inputs = content.find('input');
+    inputs.each((i, input)=> {
+      data[$(input).attr('name')] = $(input).val()
+    });
+
+    let name = data["name_"+page_info.lang];
+
+    $.ajax({
+      url: '/api/categories',
+      method: 'POST',
+      data,
+      success: function(data, status) {
+        data.name = name;
+        Admin.add_category(data);
+      }
+    })   
   }
 
   static load_glyphs() {

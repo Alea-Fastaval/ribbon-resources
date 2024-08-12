@@ -103,8 +103,8 @@ class Render {
     return dialog_wrapper
   }
 
-  static category(info) {
-    let new_category = Render.foldingSection(info.name, info.content);
+  static category(info, default_state) {
+    let new_category = Render.foldingSection(info.name, info.content, default_state);
     let header = new_category.find(".folding-section-header");
     header.css({
       "background-color": info.Background,
