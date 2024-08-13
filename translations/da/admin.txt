@@ -10,7 +10,7 @@ wing1_color Vinger til Hovedansvarlig
 wing2_color Vinger til NK
 glyphs Glyffer
 new_glyph Upload ny Glyph
-select_glyph Vælg en SVG-fil
+select_glyph_file Vælg en SVG-fil
 read_glyph_error Kunne ikke læse indholdet af glyph filen
 glyph_elements_error Kunne ikke parse elementerne i glyphen
 element Element
@@ -19,3 +19,9 @@ background Baggrund
 glyph_upload_error Glyphen kunne ikke uploades
 resource_load_failed Kunne ikke hente {} fra serveren
 new_ribbon Tilføj ny sild
+name Navn
+description Beskrivelse
+da Dansk
+en Engelsk
+select_glyph Vælg glyph
+no_wings Kun menige

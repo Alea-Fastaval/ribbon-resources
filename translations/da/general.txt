@@ -1,5 +1,6 @@
 headline Velkommen til Fastavals sildemaskine
 ok OK
+save Gem
 cancel Anullér
 login_error Brugernavn eller kode passer ikke
 user_name Bruger ID

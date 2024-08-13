@@ -87,6 +87,28 @@ class Admin {
     let main_element = $(".main-content");
 
     //-------------------------------------------
+    // Glyph Selection Dialog
+    //-------------------------------------------
+    let glyph_select_content = $(`<div class="glyph-selector-content"></div>`);
+    Admin.glyph_select_dialog = Render.dialog(pt.select_glyph, glyph_select_content);
+    Admin.glyph_select_dialog.on('cancel', () => {
+      Admin.glyph_select_dialog.listeners['ok'] = [];
+    });
+    main_element.append(Admin.glyph_select_dialog);
+
+    Admin.glyph_select_dialog.update = function() {
+      glyph_select_content.html("");
+
+      for (const glyph_id of Object.keys(Admin.glyph_list)) {
+        glyph_select_content.append(`<div class="glyph-button image-wrapper" glyph-id="${glyph_id}"><img src="/api/glyphs/${glyph_id}"/></div>`);
+
+        glyph_select_content.find(".glyph-button").on("click", (evt) => {
+          glyph_select_content.find(".glyph-button").removeClass('selected');
+          $(evt.delegateTarget).addClass('selected');
+        });
+      }
+    }
+    //-------------------------------------------
     // Categories Section
     //-------------------------------------------
     Admin.categories_content = $("<div></div>")
@@ -96,12 +118,13 @@ class Admin {
     //-------------------------------------------
     // New Category
     //-------------------------------------------
-    let new_category_button = $(`<div class="dummy-category category button">${pt.new_category}</div>`)
+    let new_category_button = $(`<div class="dummy-header button">${pt.new_category}</div>`)
     Admin.categories_content.append(new_category_button)
 
-    let category_dialog_content = Admin.get_category_dialog_content();
+    let category_dialog_content = Admin.new_category_dialog_content();
 
-    let category_dialog = Render.dialog(pt.new_category, category_dialog_content, Admin.submit_new_category);
+    let category_dialog = Render.dialog(pt.new_category, category_dialog_content);
+    category_dialog.on('ok', Admin.submit_new_category);
     main_element.append(category_dialog);
 
     new_category_button.on('click', () => {
@@ -111,14 +134,25 @@ class Admin {
     //-------------------------------------------
     // Render Categories
     //-------------------------------------------
-    for (let category of Admin.categories) {
+    for (let cat_id in Admin.categories) {
+      const category = Admin.categories[cat_id];
       category.name = Admin.translations.categories[category.ID]
  
       let new_category = Render.category(category, 'closed');
       Admin.categories_content.append(new_category);  
 
-      let new_ribbon_button = $(`<div class="dummy-category category button">${pt.new_ribbon}</div>`)
-      new_category.find(".folding-section-content").prepend(new_ribbon_button)
+      let ribbon_list = new_category.find(".folding-section-content");
+
+      //-------------------------------------------
+      // New Ribbon
+      //-------------------------------------------
+      let new_ribbon_button = $(`<div class="dummy-header button">${pt.new_ribbon}</div>`);
+      ribbon_list.append(new_ribbon_button);
+
+      new_ribbon_button.on('click', () => {
+        let new_ribbon = Admin.new_ribbon_element(cat_id);
+        new_ribbon_button.after(new_ribbon);
+      })
     }
 
     //-------------------------------------------
@@ -131,64 +165,9 @@ class Admin {
     let new_glyph_button = $(`<div class="button action-button">${pt.new_glyph}</div>`);
     Admin.glyph_content.append(new_glyph_button);
 
-    let glyph_dialog_content = $(`<div></div>`);
-    glyph_dialog_content.append(`<label for="glyph-file">${pt.select_glyph}:</label>`);
-
-    let glyph_file_input = $(`<input id="glyph-file" name="glyph_file" type="file" accept=".svg"/>`);
-    glyph_dialog_content.append(glyph_file_input);
-
-    let glyph_preprocess_section = $(`<div id="glyph-preprocess-section"></div>`);
-    glyph_dialog_content.append(glyph_preprocess_section);
-
-    // Process SVG file
-    glyph_file_input.on('change', () => {
-      glyph_preprocess_section.html('')
-      glyph_file_input.prop('files')[0].text().then((glyph_file_content) => {
-        Admin.processSVG(glyph_file_content, glyph_preprocess_section);
-      }, () => {
-        alert(pt.read_glyph_error + "/n" + glyph_file_input.prop('files')[0].name);
-      })
-    });
-
-    // Submit glyph
-    function submit_new_glyph(content) {
-      let selection_rows = content.find(".glyph-element-selection-row");
-      selection_rows.trigger("moseleave");
-
-      // Update style in DOM
-      let wrapper = content.find(".image-wrapper")
-      let style = wrapper.find("svg style")
-      let rules = style[0].sheet.cssRules
-      
-      let styletext = "";
-      for (let i = 0; i < rules.length; i++) {
-        styletext += rules[i].cssText
-      }
-      style.text(styletext);
-
-      let svg = wrapper.html()
-      let glyph_file_input = content.find('input[type=file]')
-      let name = glyph_file_input.prop('files')[0].name
-
-      // Upload glyph
-      $.ajax({
-        url: '/api/glyphs',
-        method: 'POST',
-        data: {
-          name,
-          svg
-        },
-        success: function(data, status) {
-          if (data.status == "error") {
-            alert(Admin.translations.page.glyph_upload_error)
-            return;
-          }
-          Admin.load_glyphs();
-        }
-      })   
-    }
-
-    let glyph_dialog = Render.dialog(pt.new_glyph, glyph_dialog_content, submit_new_glyph);
+    let glyph_dialog_content = Admin.new_glyph_dialog_content();
+    let glyph_dialog = Render.dialog(pt.new_glyph, glyph_dialog_content);
+    glyph_dialog.on('ok', Admin.submit_new_glyph)
     main_element.append(glyph_dialog);
 
     new_glyph_button.on('click', () => {
@@ -201,7 +180,7 @@ class Admin {
     Admin.load_glyphs();
   }
 
-  static get_category_dialog_content() {
+  static new_category_dialog_content() {
     let pt = Admin.translations.page;
     
     let category_dialog_content = $('<div></div>');
@@ -262,18 +241,103 @@ class Admin {
       data,
       success: function(data, status) {
         data.name = name;
-        Admin.add_category(data);
+        let new_category = Render.category(data, 'closed');
+        Admin.categories_content.append(new_category);  
       }
     })   
   }
 
+  static new_ribbon_element(cat_id, info = {}) {
+    let gt = Admin.translations.general;
+    let pt = Admin.translations.page;
+
+    info.id ??= 'new';
+    info.name ??= [];
+    info.description ??= [];
+    info.glyph_id ??= 0;
+    info.no_wings ??= false;
+
+    let element = $(`<div class="ribbon-info"></div>`);
+    if (info.id == 'new') element.addClass('new');
+
+    let element_content = $(`<div class="ribbon-info-content"></div>`);
+    element.append(element_content);
+
+    let glyph_selector = Admin.new_glyph_selector(info.glyph_id, cat_id);
+    element_content.append(glyph_selector);
+
+    glyph_selector.on('click', () => {
+      Admin.glyph_select_dialog.on('ok', (content) => {
+        glyph_selector.html('');
+        let glyph_id = content.find('.selected').attr('glyph-id');
+        if (glyph_id) {
+          let fg = glyph_selector.attr('fg');
+          let bg = glyph_selector.attr('bg');
+          glyph_selector.append(`<img src="/api/glyphs/${glyph_id}?fg=${fg}&bg=${bg}"/>`)
+        } else {
+          glyph_selector.append(`<div class="placeholder">${pt.select_glyph}</div>`)
+        }
+
+        // Remove listener
+        Admin.glyph_select_dialog.listeners['ok'] = [];
+      });
+      Admin.glyph_select_dialog.open();
+    })
+
+    let no_wings_wrapper = $(`<div class="no-wings-wrapper col2"></div>`);
+    no_wings_wrapper.append(`<label for="no-wings-${info.id}">${pt.no_wings}</label>`);
+    no_wings_wrapper.append(`<input id="no-wings-${info.id}" type="checkbox" ${info.no_wings ? 'checked' : ''}>`);
+    element_content.append(no_wings_wrapper);
+
+    element_content.append(`<div class="header col2">${pt.name}</div>`);
+    element_content.append(`<div class="header col3">${pt.description}</div>`);
+
+    for (const lang of Admin.translations.languages) {
+      element_content.append(`<div class="label col1">${pt[lang]}</div>`);
+      element_content.append(`<input class="col2" type="text" value="${info.name[lang] ?? ""}" id="name-${info.id}-${pt[lang]}" />`);
+      element_content.append(`<input class="col3" type="text" value="${info.description[lang] ?? ""}" id="description-${info.id}-${pt[lang]}" />`);
+    }
+    
+    let button_wrapper = $(`<div class="button-wrapper dialog-footer"></div>`);
+    element.append(button_wrapper);
+
+    let save_button = $(`<div class="save-button dialog-button">${gt.save}</button>`);
+    button_wrapper.append(save_button);
+
+    let cancel_button = $(`<div class="save-button dialog-button">${gt.cancel}</button>`);
+    button_wrapper.append(cancel_button);
+
+    return element;
+  }
+
+  static new_glyph_selector(glyph_id, cat_id) {
+    let pt = Admin.translations.page;
+
+    let fg = encodeURIComponent(Admin.categories[cat_id].Glyph);
+    let bg = encodeURIComponent(Admin.categories[cat_id].Background);
+
+    let element = $(`<div class="glyph-selector image-wrapper" fg="${fg}" bg="${bg}"></div>`);
+
+    if (glyph_id) {
+      element.append(`<img src="/api/glyphs/${glyph_id}?fg=${fg}&bg=${bg}"/>`)
+    } else {
+      element.append(`<div class="placeholder">${pt.select_glyph}</div>`)
+    }
+
+    return element;
+  }
+
   static load_glyphs() {
-    function render_glyphs() {
+    function update_glyphs() {
       let glyph_display = Admin.glyph_content.find(".glyph-display");
       glyph_display.html("")
 
       for (const glyph_id of Object.keys(Admin.glyph_list)) {
         glyph_display.append(`<div class="image-wrapper"><img src="/api/glyphs/${glyph_id}"/></div>`);
+      }
+
+      if (Admin.glyph_select_dialog) {
+        Admin.glyph_select_dialog.update();
       }
     }
 
@@ -281,9 +345,71 @@ class Admin {
       url: "api/glyphs",
       success: function(data, status) {
         Admin.glyph_list = data
-        render_glyphs()
+        update_glyphs()
       }
     })
+  }
+
+  static new_glyph_dialog_content() {
+    let pt = Admin.translations.page
+
+    let glyph_dialog_content = $(`<div></div>`);
+    glyph_dialog_content.append(`<label for="glyph-file">${pt.select_glyph_file}:</label>`);
+
+    let glyph_file_input = $(`<input id="glyph-file" name="glyph_file" type="file" accept=".svg"/>`);
+    glyph_dialog_content.append(glyph_file_input);
+
+    let glyph_preprocess_section = $(`<div id="glyph-preprocess-section"></div>`);
+    glyph_dialog_content.append(glyph_preprocess_section);
+
+    // Process SVG file
+    glyph_file_input.on('change', () => {
+      glyph_preprocess_section.html('')
+      glyph_file_input.prop('files')[0].text().then((glyph_file_content) => {
+        Admin.processSVG(glyph_file_content, glyph_preprocess_section);
+      }, () => {
+        alert(pt.read_glyph_error + "/n" + glyph_file_input.prop('files')[0].name);
+      })
+    });
+
+    return glyph_dialog_content
+  }
+
+  static submit_new_glyph(content) {
+    let selection_rows = content.find(".glyph-element-selection-row");
+    selection_rows.trigger("moseleave");
+
+    // Update style in DOM
+    let wrapper = content.find(".image-wrapper")
+    let style = wrapper.find("svg style")
+    let rules = style[0].sheet.cssRules
+    
+    let styletext = "";
+    for (let i = 0; i < rules.length; i++) {
+      styletext += rules[i].cssText
+    }
+    style.text(styletext);
+
+    let svg = wrapper.html()
+    let glyph_file_input = content.find('input[type=file]')
+    let name = glyph_file_input.prop('files')[0].name
+
+    // Upload glyph
+    $.ajax({
+      url: '/api/glyphs',
+      method: 'POST',
+      data: {
+        name,
+        svg
+      },
+      success: function(data, status) {
+        if (data.status == "error") {
+          alert(Admin.translations.page.glyph_upload_error)
+          return;
+        }
+        Admin.load_glyphs();
+      }
+    })   
   }
 
   static processSVG(glyph_content, element) {

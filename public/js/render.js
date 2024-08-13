@@ -40,10 +40,47 @@ class Render {
     return section
   }
 
-  static dialog(title, content, callback) {
+  static dialog(title, content) {
     let dialog_wrapper = $('<div class="dialog-wrapper closed"></div>');
 
+    /**
+     * Listeners
+     */
+    dialog_wrapper._on = dialog_wrapper.on
+    dialog_wrapper.listeners = {};
+    dialog_wrapper.on = function(evt_name, callback) {
+      let supported = [
+        "ok",
+        "cancel",
+        "open",
+      ];
+
+      if (!supported.includes(evt_name)) {
+        dialog_wrapper._on(evt_name, callback);
+        return;
+      }
+
+      if (Array.isArray(dialog_wrapper.listeners[evt_name])) {
+        dialog_wrapper.listeners[evt_name].push(callback);
+      } else {
+        dialog_wrapper.listeners[evt_name] = [callback];
+      }
+    }
+
+    dialog_wrapper.trigger = function(evt_name) {
+      if (!Array.isArray(dialog_wrapper.listeners[evt_name])) return;
+
+      for (const callback of dialog_wrapper.listeners[evt_name]) {
+        callback(content);
+      }
+    }
+
+    /**
+     * Open/close
+     */
     dialog_wrapper.open = function() {
+      dialog_wrapper.trigger('open');
+
       dialog_wrapper.removeClass('closed');
       dialog_wrapper.addClass('open');
     }
@@ -53,6 +90,9 @@ class Render {
       dialog_wrapper.addClass('closed');
     }
 
+    /**
+     * Content
+     */
     let dialog = $('<div class="dialog"></div>');
     dialog_wrapper.append(dialog);
 
@@ -74,6 +114,9 @@ class Render {
     }
     dialog.append(content);
 
+    /**
+     * Fotter & buttons
+     */
     let dialog_footer = $('<div class="dialog-footer"></div>');
     dialog.append(dialog_footer);
 
@@ -84,20 +127,24 @@ class Render {
     let cancel_button = $(`<div class="dialog-button" tabindex="0">${gt.cancel}</div>`);
     dialog_footer.append(cancel_button);
 
-    dialog_close_icon.on('click', () => {dialog_wrapper.close()})
+    dialog_close_icon.on('click', () => {
+      dialog_wrapper.close();
+      dialog_wrapper.trigger('cancel');
+    })
     cancel_button.on('click keydown', (evt) => {
       // Only capture Enter and Space
       if (evt.type == 'keydown' && evt.which !== 13 && evt.which != 32) return;
 
-      dialog_wrapper.close()}
-    )
+      dialog_wrapper.close();
+      dialog_wrapper.trigger('cancel');
+    })
 
     ok_button.on('click keydown', (evt) => {
       // Only capture Enter and Space
       if (evt.type == 'keydown' && evt.which !== 13 && evt.which != 32) return;
 
       dialog_wrapper.close();
-      callback(content)
+      dialog_wrapper.trigger('ok');
     })
 
     return dialog_wrapper
@@ -105,11 +152,20 @@ class Render {
 
   static category(info, default_state) {
     let new_category = Render.foldingSection(info.name, info.content, default_state);
+    new_category.attr({
+      bg: info.Background,
+      fg: info.Glyph,
+    })
+    new_category.css({
+      "--background-color": info.Background,
+      "--stripes-color": info.Stripes,
+      "--glyph-color": info.Glyph,
+    })
+
     let header = new_category.find(".folding-section-header");
     header.css({
-      "background-color": info.Background,
-      "--stripes-color": info.Stripes,
-      "color": info.Glyph,
+      "background-color": "var(--background-color)",
+      "color": "var(--glyph-color)",
     })
 
     new_category.addClass('category');
