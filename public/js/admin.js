@@ -180,6 +180,14 @@ class Admin {
     Admin.load_glyphs();
   }
 
+  //-------------------------------------------
+  // Helper Functions
+  //-------------------------------------------
+
+  /**
+   * Creates the content for the "New Category"-dialog
+   * @returns jQuery element
+   */
   static new_category_dialog_content() {
     let pt = Admin.translations.page;
     
@@ -225,6 +233,9 @@ class Admin {
     return category_dialog_content; 
   }
 
+  /**
+   * Submits a new category to the server using content of the "New Category"-dialog
+   */
   static submit_new_category(content) {
     let data = {};
     
@@ -247,6 +258,11 @@ class Admin {
     })   
   }
 
+  /**
+   * Creates a new element for displaying ribbon properties
+   * using the data provided
+   * @returns jQerry element
+   */
   static new_ribbon_element(cat_id, info = {}) {
     let gt = Admin.translations.general;
     let pt = Admin.translations.page;
@@ -310,6 +326,10 @@ class Admin {
     return element;
   }
 
+  /**
+   * Creates a glyph selector GUI element
+   * @returns jQerry element
+   */
   static new_glyph_selector(glyph_id, cat_id) {
     let pt = Admin.translations.page;
 
@@ -327,6 +347,10 @@ class Admin {
     return element;
   }
 
+  /**
+   * Loads all glyphs from the server and updates the glyph display and glyph selction dialog
+   * with the new result
+   */
   static load_glyphs() {
     function update_glyphs() {
       let glyph_display = Admin.glyph_content.find(".glyph-display");
@@ -350,6 +374,10 @@ class Admin {
     })
   }
 
+  /**
+   * Creates the content for the glyph selection dialog
+   * @returns jQerry element
+   */
   static new_glyph_dialog_content() {
     let pt = Admin.translations.page
 
@@ -375,6 +403,10 @@ class Admin {
     return glyph_dialog_content
   }
 
+
+  /**
+   * Submits a new glyph to the server and reloads glyphs if successful
+   */
   static submit_new_glyph(content) {
     let selection_rows = content.find(".glyph-element-selection-row");
     selection_rows.trigger("moseleave");
@@ -412,6 +444,10 @@ class Admin {
     })   
   }
 
+  /**
+   * Creates and inserts the elements needed to prepare the SVG of a new glyph before
+   * it's ready to be uploaded
+   */
   static processSVG(glyph_content, element) {
     element.html('');
 
