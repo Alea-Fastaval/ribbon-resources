@@ -25,3 +25,4 @@ da Dansk
 en Engelsk
 select_glyph Vælg glyph
 no_wings Kun menige
+ribbon_submit_error Der skete en fejl under upload af sild

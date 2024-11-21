@@ -100,7 +100,7 @@ class Admin {
       glyph_select_content.html("");
 
       for (const glyph_id of Object.keys(Admin.glyph_list)) {
-        glyph_select_content.append(`<div class="glyph-button image-wrapper" glyph-id="${glyph_id}"><img src="/api/glyphs/${glyph_id}"/></div>`);
+        glyph_select_content.append(`<div class="glyph-button glyph-wrapper" glyph-id="${glyph_id}"><img src="/api/glyphs/${glyph_id}"/></div>`);
 
         glyph_select_content.find(".glyph-button").on("click", (evt) => {
           glyph_select_content.find(".glyph-button").removeClass('selected');
@@ -134,14 +134,15 @@ class Admin {
     //-------------------------------------------
     // Render Categories
     //-------------------------------------------
-    for (let cat_id in Admin.categories) {
-      const category = Admin.categories[cat_id];
+    for (let cat_index in Admin.categories) {
+      const category = Admin.categories[cat_index];
       category.name = Admin.translations.categories[category.ID]
  
-      let new_category = Render.category(category, 'closed');
-      Admin.categories_content.append(new_category);  
+      let category_element = Render.category(category, 'closed');
+      category_element.attr('cat-id', category.ID);
+      Admin.categories_content.append(category_element);  
 
-      let ribbon_list = new_category.find(".folding-section-content");
+      let ribbon_list = category_element.find(".folding-section-content");
 
       //-------------------------------------------
       // New Ribbon
@@ -150,7 +151,7 @@ class Admin {
       ribbon_list.append(new_ribbon_button);
 
       new_ribbon_button.on('click', () => {
-        let new_ribbon = Admin.new_ribbon_element(cat_id);
+        let new_ribbon = Admin.new_ribbon_element(cat_index);
         new_ribbon_button.after(new_ribbon);
       })
     }
@@ -275,6 +276,7 @@ class Admin {
 
     let element = $(`<div class="ribbon-info"></div>`);
     if (info.id == 'new') element.addClass('new');
+    element.attr('ribbon-id', info.id);
 
     let element_content = $(`<div class="ribbon-info-content"></div>`);
     element.append(element_content);
@@ -290,8 +292,10 @@ class Admin {
           let fg = glyph_selector.attr('fg');
           let bg = glyph_selector.attr('bg');
           glyph_selector.append(`<img src="/api/glyphs/${glyph_id}?fg=${fg}&bg=${bg}"/>`)
+          glyph_selector.attr('glyph-id', glyph_id);
         } else {
           glyph_selector.append(`<div class="placeholder">${pt.select_glyph}</div>`)
+          glyph_selector.attr('glyph-id', '');
         }
 
         // Remove listener
@@ -310,20 +314,65 @@ class Admin {
 
     for (const lang of Admin.translations.languages) {
       element_content.append(`<div class="label col1">${pt[lang]}</div>`);
-      element_content.append(`<input class="col2" type="text" value="${info.name[lang] ?? ""}" id="name-${info.id}-${pt[lang]}" />`);
-      element_content.append(`<input class="col3" type="text" value="${info.description[lang] ?? ""}" id="description-${info.id}-${pt[lang]}" />`);
+      element_content.append(`<input class="col2" type="text" value="${info.name[lang] ?? ""}" id="name-${info.id}-${lang}" />`);
+      element_content.append(`<input class="col3" type="text" value="${info.description[lang] ?? ""}" id="desc-${info.id}-${lang}" />`);
     }
     
     let button_wrapper = $(`<div class="button-wrapper dialog-footer"></div>`);
     element.append(button_wrapper);
 
+    // Save button
     let save_button = $(`<div class="save-button dialog-button">${gt.save}</button>`);
     button_wrapper.append(save_button);
 
+    save_button.on('click', () => {
+      Admin.submit_ribbon(element);
+    });
+
+    // Cancel button
     let cancel_button = $(`<div class="save-button dialog-button">${gt.cancel}</button>`);
     button_wrapper.append(cancel_button);
 
+    cancel_button.on('click', () => {
+      element.remove()
+    });
+
     return element;
+  }
+
+  static submit_ribbon(element) {
+    let data = {};
+    let id = element.attr('ribbon-id');
+
+    data.category = element.parents(".category").attr('cat-id');
+    data.glyph = element.find(".glyph-selector").attr('glyph-id');
+    data.no_wings = element.find(`#no-wings-${id}`).prop('checked');
+
+    for (const lang of Admin.translations.languages) {
+      data[`name_${lang}`] = element.find(`#name-${id}-${lang}`).val();
+      data[`desc_${lang}`] = element.find(`#desc-${id}-${lang}`).val();
+    }
+
+    if (id == 'new') {
+      $.ajax({
+        url: '/api/ribbons',
+        method: 'POST',
+        data,
+        success: function(data, status) {
+          if (data.status == "error") {
+            alert(Admin.translations.page.ribbon_submit_error)
+            return;
+          }
+          
+          element.remove()
+          // Reload ribbons
+        },
+        error: function() {
+          alert(Admin.translations.page.ribbon_submit_error)
+        }
+      })   
+    }
+
   }
 
   /**
@@ -336,7 +385,7 @@ class Admin {
     let fg = encodeURIComponent(Admin.categories[cat_id].Glyph);
     let bg = encodeURIComponent(Admin.categories[cat_id].Background);
 
-    let element = $(`<div class="glyph-selector image-wrapper" fg="${fg}" bg="${bg}"></div>`);
+    let element = $(`<div class="glyph-selector glyph-wrapper" fg="${fg}" bg="${bg}"></div>`);
 
     if (glyph_id) {
       element.append(`<img src="/api/glyphs/${glyph_id}?fg=${fg}&bg=${bg}"/>`)
@@ -357,7 +406,7 @@ class Admin {
       glyph_display.html("")
 
       for (const glyph_id of Object.keys(Admin.glyph_list)) {
-        glyph_display.append(`<div class="image-wrapper"><img src="/api/glyphs/${glyph_id}"/></div>`);
+        glyph_display.append(`<div class="glyph-wrapper"><img src="/api/glyphs/${glyph_id}"/></div>`);
       }
 
       if (Admin.glyph_select_dialog) {
@@ -412,7 +461,7 @@ class Admin {
     selection_rows.trigger("moseleave");
 
     // Update style in DOM
-    let wrapper = content.find(".image-wrapper")
+    let wrapper = content.find(".glyph-wrapper")
     let style = wrapper.find("svg style")
     let rules = style[0].sheet.cssRules
     
@@ -451,7 +500,7 @@ class Admin {
   static processSVG(glyph_content, element) {
     element.html('');
 
-    let preview = $(`<div class="image-wrapper"></div>`);
+    let preview = $(`<div class="glyph-wrapper"></div>`);
     element.append(preview);
 
     preview.append(glyph_content);
