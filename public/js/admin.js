@@ -3,37 +3,39 @@
 $(function() {
 
   let need_loading = {
-    categories: {
-      url: "/api/categories",
-      object: Admin,
-      field: "categories"
-    },
-    page_translations: {
-      url: `/api/translations/${page_info.lang}/admin/`,
-      object: Admin.translations,
-      field: "page",
-    },
-    general_translations: {
-      url: `/api/translations/${page_info.lang}/general/`,
-      object: Admin.translations,
-      field: "general",
-    },
-    category_translations: {
-      url: `/api/translations/${page_info.lang}/categories*`,
-      object: Admin.translations,
-      field: "categories",
-      data_field: "categories",
-    },
-    languages: {
-      url: "api/translations/languages",
-      object: Admin.translations,
-      field: "languages"
+    categories: {},
+    ribbons: {},
+    translations: {
+      _sub_list: true,
+      page: {
+        url: `/api/translations/${page_info.lang}/admin/`,
+      },
+      general: {
+        url: `/api/translations/${page_info.lang}/general/`,
+      },
+      categories: {
+        url: `/api/translations/${page_info.lang}/categories*`,
+        data_field: "categories",
+      },
+      languages: {},
     },
   }
 
-  function resource_loaded(key) {
-    delete need_loading[key];
-    if (Object.keys(need_loading).length == 0) {
+  function resource_loaded(key, keys, list = need_loading, level = 0) {
+    if (keys.length != 0) {
+      let sub_keys = [...keys];
+      let sub_key = sub_keys.shift();
+      resource_loaded(key, sub_keys, list[sub_key], level + 1);
+
+      if (Object.keys(list[sub_key]).length == 1) {
+        delete list[sub_key];
+      }
+        
+    } else {
+      delete list[key];
+    }
+
+    if (level == 0 && Object.keys(list).length == 0) {
       Admin.render_page()
     }
   }
@@ -48,32 +50,46 @@ $(function() {
     alert(message);
   }
 
-  for (const key in need_loading) {
-    let object = need_loading[key].object;
-    let field = need_loading[key].field;
-
-    $.ajax({
-      url: need_loading[key].url,
-      success: function(data, status) {
-        if (data.status == "error") {
-          load_error(key);
-          return;
-        }
-
-        let data_field = need_loading[key].data_field
-        if (data_field === undefined) {
-          object[field] = data;
-        } else {
-          object[field] = data[data_field];
-        }
-        
-        resource_loaded(key);
-      },
-      error: function() {
-        load_error(key);
+  function load_resources(list, into, path, keys = []) {
+    
+    for (const key in list) {
+      if (list[key]._sub_list) {
+        into[key] = into[key] ?? {};
+        load_resources(list[key], into[key], path+key+'/', [...keys, key]);
+        continue;
       }
-    }) 
+
+      if (key == "_sub_list") continue;
+
+      let target = list[key].into ?? into;
+      let field = list[key].field ?? key;
+      let url = list[key].url ?? path+key;
+      let data_field = list[key].data_field
+  
+      $.ajax({
+        url,
+        success: function(data, status) {
+          if (data.status == "error") {
+            load_error(key);
+            return;
+          }
+  
+          if (data_field === undefined) {
+            target[field] = data;
+          } else {
+            target[field] = data[data_field];
+          }
+          
+          resource_loaded(key, keys);
+        },
+        error: function() {
+          load_error(key);
+        }
+      }) 
+    }
   }
+
+  load_resources(need_loading, Admin, "/api/");
 });
 
 class Admin {
