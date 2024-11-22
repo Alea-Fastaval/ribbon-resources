@@ -1,7 +1,9 @@
 "use strict";
 
 class Render {
-  
+  //--------------------------------------------------------------------------------------------------------------------
+  // Folding section
+  //--------------------------------------------------------------------------------------------------------------------
   static foldingSection(header_text, content, default_state = "open") {
     let section = $(`<div class="folding-section ${default_state}"></div>`);
     
@@ -40,6 +42,9 @@ class Render {
     return section
   }
 
+  //--------------------------------------------------------------------------------------------------------------------
+  // Dialog
+  //--------------------------------------------------------------------------------------------------------------------
   static dialog(title, content) {
     let dialog_wrapper = $('<div class="dialog-wrapper closed"></div>');
 
@@ -150,26 +155,41 @@ class Render {
     return dialog_wrapper
   }
 
+  //--------------------------------------------------------------------------------------------------------------------
+  // Category
+  //--------------------------------------------------------------------------------------------------------------------
   static category(info, default_state) {
     let new_category = Render.foldingSection(info.name, info.content, default_state);
     new_category.attr({
+      id: `category-${info.ID}`,
       bg: info.Background,
       fg: info.Glyph,
     })
+    
     new_category.css({
       "--background-color": info.Background,
       "--stripes-color": info.Stripes,
       "--glyph-color": info.Glyph,
     })
 
-    let header = new_category.find(".folding-section-header");
-    header.css({
-      "background-color": "var(--background-color)",
-      "color": "var(--glyph-color)",
-    })
-
     new_category.addClass('category');
 
     return new_category;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  // Ribbon
+  //--------------------------------------------------------------------------------------------------------------------
+  static ribbon(info) {
+    let category = Admin.get_category_from_id(info.Category);
+
+    let glyph_src = `/api/glyphs/${info.Glyph}?fg=${encodeURIComponent(category.Glyph)}&bg=${encodeURIComponent(category.Background)}`;
+    let ribbon_element = $(
+    `<div class="ribbon-wrapper">
+      <div class="ribbon"><img src="${glyph_src}"></div>
+      <div class="ribbon-label">${info.name}</div>
+    <div>`);
+
+    return ribbon_element;
   }
 }

@@ -21,23 +21,31 @@ h1 {
 
 .folding-section-header,
 .dummy-header {
-  background-color: var(--highlight-color);
-  padding: .5rem;
-  border-radius: var(--rounding);
-  font-size: 1.2rem;
-  font-weight: bold;
   display: flex;
   justify-content: space-between;
+
+  border-radius: var(--rounding);
+  background-color: var(--highlight-color);
+
+  font-size: 1.2rem;
+  font-weight: bold;
+
+  padding: .5rem;
   margin-bottom: 1rem;
 }
 
-.category > .folding-section-header {
-  border-left: var(--stripes-color) .75rem solid;
-  border-right: var(--stripes-color) .75rem solid;
+.folding-section-header div,
+.ribbon-label {
+  align-self: center;
 }
 
-.folding-section-header div {
-  align-self: center;
+.category > .folding-section-header,
+.ribbon {
+  background-color: var(--background-color);
+  color: var(--glyph-color);
+
+  border-left: var(--stripes-color) .75rem solid;
+  border-right: var(--stripes-color) .75rem solid;
 }
 
 .folding-section-header-icon {
@@ -54,6 +62,26 @@ h1 {
 
 .folding-section-content {
   margin: 0 1rem;
+}
+
+.ribbon-wrapper {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.ribbon {
+  display: flex;
+  height: 1.5rem;
+  width: 2.5rem;
+
+  justify-content: center;
+
+  padding: 2px 0;
+  margin-right: .5rem;
+}
+
+.ribbon img {
+  max-width: 1.5rem;
 }
 
 #fastaval-logo {
