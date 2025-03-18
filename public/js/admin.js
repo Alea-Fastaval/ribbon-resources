@@ -116,6 +116,7 @@ class Admin {
       //-------------------------------------------
       if (Ribbon.ribbons[category.ID]) for (const ribbon of Ribbon.ribbons[category.ID]) {
         ribbon.name = Ribbon.translations.ribbons[ribbon.ID].name;
+        ribbon.desc = Ribbon.translations.ribbons[ribbon.ID].desc;
         let ribbon_element = Render.ribbon(ribbon, category);
         ribbon_list.append(ribbon_element);
       }
