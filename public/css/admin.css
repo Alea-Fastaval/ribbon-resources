@@ -121,8 +121,7 @@
 }
 
 .button,
-.dialog-button,
-.folding-section-header {
+.dialog-button {
   cursor: pointer;
 }
 

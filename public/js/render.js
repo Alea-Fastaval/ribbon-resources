@@ -1,6 +1,10 @@
 "use strict";
 
 class Render {
+  static init(translations) {
+    Render.translations = translations;
+  }
+
   //--------------------------------------------------------------------------------------------------------------------
   // Folding section
   //--------------------------------------------------------------------------------------------------------------------
@@ -125,7 +129,7 @@ class Render {
     let dialog_footer = $('<div class="dialog-footer"></div>');
     dialog.append(dialog_footer);
 
-    let gt = Admin.translations.general;
+    let gt = Render.translations.general;
     let ok_button = $(`<div class="dialog-button" tabindex="0">${gt.ok}</div>`);
     dialog_footer.append(ok_button);
 
@@ -180,10 +184,8 @@ class Render {
   //--------------------------------------------------------------------------------------------------------------------
   // Ribbon
   //--------------------------------------------------------------------------------------------------------------------
-  static ribbon(info) {
-    let category = Admin.get_category_from_id(info.Category);
-
-    let glyph_src = `/api/glyphs/${info.Glyph}?fg=${encodeURIComponent(category.Glyph)}&bg=${encodeURIComponent(category.Background)}`;
+  static ribbon(info, colors) {
+    let glyph_src = `/api/glyphs/${info.Glyph}?fg=${encodeURIComponent(colors.Glyph)}&bg=${encodeURIComponent(colors.Background)}`;
     let ribbon_element = $(
     `<div class="ribbon-wrapper">
       <div class="ribbon"><img src="${glyph_src}"></div>

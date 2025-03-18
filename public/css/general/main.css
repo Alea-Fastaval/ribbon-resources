@@ -32,6 +32,8 @@ h1 {
 
   padding: .5rem;
   margin-bottom: 1rem;
+
+  cursor: pointer;
 }
 
 .folding-section-header div,

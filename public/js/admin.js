@@ -2,7 +2,7 @@
 
 $(function() {
 
-  let need_loading = {
+  let resources = {
     categories: {},
     ribbons: {},
     translations: {
@@ -25,70 +25,7 @@ $(function() {
     },
   }
 
-  function resource_loaded(key, keys, list = need_loading, level = 0) {
-    if (keys.length != 0) {
-      let sub_keys = [...keys];
-      let sub_key = sub_keys.shift();
-      resource_loaded(key, sub_keys, list[sub_key], level + 1);
-
-      if (Object.keys(list[sub_key]).length == 1) {
-        delete list[sub_key];
-      }
-        
-    } else {
-      delete list[key];
-    }
-
-    if (level == 0 && Object.keys(list).length == 0) {
-      Admin.render_page()
-    }
-  }
-
-  function load_error(key) {
-    let message
-    if (Admin.translations.page != undefined && Admin.translations.page.resource_load_failed != undefined) {
-      message = Admin.translations.page.resource_load_failed.replace("{}", key);
-    } else {
-      message = "Could not load resource: " + key;
-    }
-    alert(message);
-  }
-
-  function load_resources(list, into, path, keys = []) {
-    
-    for (const key in list) {
-      if (list[key]._sub_list) {
-        into[key] = into[key] ?? {};
-        load_resources(list[key], into[key], path+key+'/', [...keys, key]);
-        continue;
-      }
-
-      if (key == "_sub_list") continue;
-
-      let target = list[key].into ?? into;
-      let field = list[key].field ?? key;
-      let url = list[key].url ?? path+key;
-      let data_field = list[key].data_field;
-  
-      $.ajax({
-        url,
-        success: function(data, status) {
-          if (data.status == "error") {
-            load_error(key);
-            return;
-          }
-          target[field] = data_field ? data[data_field] : data;
-          
-          resource_loaded(key, keys);
-        },
-        error: function() {
-          load_error(key);
-        }
-      }) 
-    }
-  }
-
-  load_resources(need_loading, Admin, "/api/");
+  Ribbon.load_resources(() => {Admin.render_page()}, resources, "/api/");
 });
 
 class Admin {
@@ -96,8 +33,10 @@ class Admin {
   static category_by_id = {}
 
   static render_page() {
-    let pt = Admin.translations.page;
-    let gt = Admin.translations.general;
+    Render.init(Ribbon.translations);
+
+    let pt = Ribbon.translations.page;
+    let gt = Ribbon.translations.general;
 
     let main_element = $(".main-content");
 
@@ -149,12 +88,12 @@ class Admin {
     //-------------------------------------------
     // Render Categories
     //-------------------------------------------
-    for (const cat_index in Admin.categories) {
-      const category = Admin.categories[cat_index];
+    for (const cat_index in Ribbon.categories) {
+      const category = Ribbon.categories[cat_index];
 
       Admin.category_by_id[category.ID] = cat_index
 
-      category.name = Admin.translations.categories[category.ID]
+      category.name = Ribbon.translations.categories[category.ID]
       let category_element = Render.category(category, 'closed');
       category_element.attr('cat-id', category.ID);
       Admin.categories_content.append(category_element);  
@@ -175,9 +114,9 @@ class Admin {
       //-------------------------------------------
       // Render Ribbons
       //-------------------------------------------
-      if (Admin.ribbons[category.ID]) for (const ribbon of Admin.ribbons[category.ID]) {
-        ribbon.name = Admin.translations.ribbons[ribbon.ID].name;
-        let ribbon_element = Render.ribbon(ribbon);
+      if (Ribbon.ribbons[category.ID]) for (const ribbon of Ribbon.ribbons[category.ID]) {
+        ribbon.name = Ribbon.translations.ribbons[ribbon.ID].name;
+        let ribbon_element = Render.ribbon(ribbon, category);
         ribbon_list.append(ribbon_element);
       }
     }
@@ -216,7 +155,7 @@ class Admin {
    */
   static get_category_from_id(id) {
     if (Admin.category_by_id[id]) {
-      return Admin.categories[Admin.category_by_id[id]]
+      return Ribbon.categories[Admin.category_by_id[id]]
     }
   }
 
@@ -225,14 +164,14 @@ class Admin {
    * @returns jQuery element
    */
   static new_category_dialog_content() {
-    let pt = Admin.translations.page;
+    let pt = Ribbon.translations.page;
     
     let category_dialog_content = $('<div></div>');
     let field_list = $('<div class="dialog-fieldlist"></div>');
     category_dialog_content.append(field_list);
 
     // Category name for each language
-    for (const lang of Admin.translations.languages) {
+    for (const lang of Ribbon.translations.languages) {
       field_list.append(`<label class="dialog-field-label" for="category-name-${lang}">${pt['name_'+lang]}:</label>`);
       field_list.append(`<input class="dialog-field col2" id="category-name-${lang}" name="name_${lang}" type="text">`);
     }
@@ -300,8 +239,8 @@ class Admin {
    * @returns jQerry element
    */
   static new_ribbon_element(cat_index, info = {}) {
-    let gt = Admin.translations.general;
-    let pt = Admin.translations.page;
+    let gt = Ribbon.translations.general;
+    let pt = Ribbon.translations.page;
 
     info.id ??= 'new';
     info.name ??= [];
@@ -347,7 +286,7 @@ class Admin {
     element_content.append(`<div class="header col2">${pt.name}</div>`);
     element_content.append(`<div class="header col3">${pt.description}</div>`);
 
-    for (const lang of Admin.translations.languages) {
+    for (const lang of Ribbon.translations.languages) {
       element_content.append(`<div class="label col1">${pt[lang]}</div>`);
       element_content.append(`<input class="col2" type="text" value="${info.name[lang] ?? ""}" id="name-${info.id}-${lang}" />`);
       element_content.append(`<input class="col3" type="text" value="${info.description[lang] ?? ""}" id="desc-${info.id}-${lang}" />`);
@@ -386,7 +325,7 @@ class Admin {
     data.glyph = element.find(".glyph-selector").attr('glyph-id');
     data.no_wings = element.find(`#no-wings-${id}`).prop('checked');
 
-    for (const lang of Admin.translations.languages) {
+    for (const lang of Ribbon.translations.languages) {
       data[`name_${lang}`] = element.find(`#name-${id}-${lang}`).val();
       data[`desc_${lang}`] = element.find(`#desc-${id}-${lang}`).val();
     }
@@ -400,17 +339,18 @@ class Admin {
         data,
         success: function(data, status) {
           if (data.status == "error") {
-            alert(Admin.translations.page.ribbon_submit_error)
+            alert(Ribbon.translations.page.ribbon_submit_error)
             return;
           }
           
           element.remove()
           data.name = name;
-          let ribbon_element = Render.ribbon(data);
+          let category = Admin.get_category_from_id(data.Category);
+          let ribbon_element = Render.ribbon(data, category);
           Admin.categories_content.find(`#category-${data.Category}`).append(ribbon_element);
         },
         error: function() {
-          alert(Admin.translations.page.ribbon_submit_error)
+          alert(Ribbon.translations.page.ribbon_submit_error)
         }
       })   
     }
@@ -422,10 +362,10 @@ class Admin {
    * @returns jQerry element
    */
   static new_glyph_selector(glyph_id, cat_index) {
-    let pt = Admin.translations.page;
+    let pt = Ribbon.translations.page;
 
-    let fg = encodeURIComponent(Admin.categories[cat_index].Glyph);
-    let bg = encodeURIComponent(Admin.categories[cat_index].Background);
+    let fg = encodeURIComponent(Ribbon.categories[cat_index].Glyph);
+    let bg = encodeURIComponent(Ribbon.categories[cat_index].Background);
 
     let element = $(`<div class="glyph-selector glyph-wrapper" fg="${fg}" bg="${bg}"></div>`);
 
@@ -470,7 +410,7 @@ class Admin {
    * @returns jQerry element
    */
   static new_glyph_dialog_content() {
-    let pt = Admin.translations.page
+    let pt = Ribbon.translations.page
 
     let glyph_dialog_content = $(`<div></div>`);
     glyph_dialog_content.append(`<label for="glyph-file">${pt.select_glyph_file}:</label>`);
@@ -526,7 +466,7 @@ class Admin {
       },
       success: function(data, status) {
         if (data.status == "error") {
-          alert(Admin.translations.page.glyph_upload_error)
+          alert(Ribbon.translations.page.glyph_upload_error)
           return;
         }
         Admin.load_glyphs();
@@ -567,7 +507,7 @@ class Admin {
       }
     }
 
-    let pt = Admin.translations.page
+    let pt = Ribbon.translations.page
     if (selections.length == 0) {
       alert(pt.glyph_elements_error);
     }
