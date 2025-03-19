@@ -1,2 +1,12 @@
+#Preview section
 preview Forhåndsvisning
+
+#Selection section
 selection_header Tilføj sild til din sildesalat
+
+#Ribbon list
+years år
+grunt Menig
+second NK
+leader Områdeleder
+total I alt
