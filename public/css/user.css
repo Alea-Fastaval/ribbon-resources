@@ -1,0 +1,40 @@
+.ribbon-list {
+  display: grid;
+  row-gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.ribbon-list > div {
+  justify-self: center;
+}
+
+.ribbon-list .ribbon-wrapper {
+  justify-self: left;
+  margin: 0;
+}
+
+.ribbon-list .number-dial-wrapper {
+  margin-left: 1.5rem;
+}
+
+.ribbon-list .number-dial-value {
+  text-align: center;
+  width: 1.5rem;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.ribbon-list .number-dial-value::-webkit-outer-spin-button,
+.ribbon-list .number-dial-value::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.ribbon-list .ribbon-list-total {
+  width: 3rem;
+  text-align: end;
+}
+
+.ribbon-year-label {
+  margin-left: .5rem;
+}
