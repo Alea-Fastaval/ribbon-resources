@@ -1,28 +1,41 @@
 headline Administration af sildemaskine
-categories Kategorier
-new_category Opret ny kategori
+
+#Attributes
 name_da Dansk navn
 name_en Engelsk navn
+
+#Categories
+new_category Opret ny kategori
+categories Kategorier
 background_color Baggrundsfarve
 stripes_color Farve på striber
 glyph_color Farve på glyph
 wing1_color Vinger til Hovedansvarlig
 wing2_color Vinger til NK
-glyphs Glyffer
+
+#Glyphs
 new_glyph Upload ny Glyph
+glyphs Glyffer
 select_glyph_file Vælg en SVG-fil
-read_glyph_error Kunne ikke læse indholdet af glyph filen
-glyph_elements_error Kunne ikke parse elementerne i glyphen
 element Element
 foreground Forgrund
 background Baggrund
-glyph_upload_error Glyphen kunne ikke uploades
-resource_load_failed Kunne ikke hente {} fra serveren
+
+#Ribbon
 new_ribbon Tilføj ny sild
 name Navn
 description Beskrivelse
-da Dansk
-en Engelsk
 select_glyph Vælg glyph
 no_wings Kun menige
+
+#Languages
+da Dansk
+en Engelsk
+
+#Errors
+resource_load_failed Kunne ikke hente {} fra serveren
 ribbon_submit_error Der skete en fejl under upload af sild
+read_glyph_error Kunne ikke læse indholdet af glyph filen
+glyph_elements_error Kunne ikke parse elementerne i glyphen
+glyph_upload_error Glyphen kunne ikke uploades
+
