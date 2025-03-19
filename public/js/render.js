@@ -191,8 +191,40 @@ class Render {
       <div class="ribbon-info"><div class="info-text">${info.desc}</div></div>
       <div class="ribbon"><img src="${glyph_src}"></div>
       <div class="ribbon-label">${info.name}</div>
-    <div>`);
+    </div>`);
 
     return ribbon_element;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  // number dial
+  //--------------------------------------------------------------------------------------------------------------------
+  static number_dial(initial = 0) {
+    let dial_wrapper = $(`<div class="number-dial-wrapper"></div>`);
+
+    let number_input = $(`<input class="number-dial-value" type="number" value="${initial}" initial-value="${initial}" min="0" maxlength="2" size="2" />`)
+
+    let increase_button = $('<button class="number-dial-button number-dial-increase-button">+</button>');
+    increase_button.on('click', () => {
+      let value = parseInt(number_input.val());
+      value = isNaN(value) ? 0 : value;
+      number_input.val(value + 1);
+      number_input.change();
+    });
+
+    let decrease_button = $('<button class="number-dial-button number-dial-decrease-button">-</button>');
+    decrease_button.on('click', () => {
+      let value = parseInt(number_input.val());
+      value = isNaN(value) ? 1 : value;
+      number_input.val(value - 1);
+      number_input.change();
+    });
+
+    dial_wrapper.append(decrease_button);
+    dial_wrapper.append(number_input);
+    dial_wrapper.append(increase_button);
+    dial_wrapper.append(`<span class="ribbon-year-label">${Render.translations.page.years}</span>`);
+
+    return dial_wrapper;
   }
 }
