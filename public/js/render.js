@@ -199,10 +199,10 @@ class Render {
   //--------------------------------------------------------------------------------------------------------------------
   // number dial
   //--------------------------------------------------------------------------------------------------------------------
-  static number_dial(initial = 0) {
+  static number_dial(name, initial = 0) {
     let dial_wrapper = $(`<div class="number-dial-wrapper"></div>`);
 
-    let number_input = $(`<input class="number-dial-value" type="number" value="${initial}" initial-value="${initial}" min="0" maxlength="2" size="2" />`)
+    let number_input = $(`<input class="number-dial-value" type="number" value="${initial}" initial-value="${initial}" name="${name}" min="0" maxlength="2" size="2" />`)
 
     let increase_button = $('<button class="number-dial-button number-dial-increase-button">+</button>');
     increase_button.on('click', () => {

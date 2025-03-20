@@ -79,18 +79,18 @@ class UserPage {
         ribbon_list.append(ribbon_element);
 
         // Number dials
-        let grunt = Render.number_dial();
+        let grunt = Render.number_dial('grunt');
         grunt.css('grid-column', 2);
         grunt.attr('ribbon-id', ribbon.ID);
         ribbon_list.append(grunt);
 
         if (ribbon.NoWings === false) {
-          let second = Render.number_dial();
+          let second = Render.number_dial('second');
           second.css('grid-column', 3);
           second.attr('ribbon-id', ribbon.ID);
           ribbon_list.append(second);
 
-          let leader = Render.number_dial();
+          let leader = Render.number_dial('leader');
           leader.css('grid-column', 4);
           leader.attr('ribbon-id', ribbon.ID);
           ribbon_list.append(leader);
@@ -110,6 +110,10 @@ class UserPage {
         save_button.attr('ribbon-id', ribbon.ID);
         save_button.prop('disabled', true);
         ribbon_list.append(save_button);
+        save_button.on("click", () => {
+          save_button.prop('disabled', true);
+          UserPage.submit_order(ribbon.ID);
+        });
         
         // Calculate total
         let inputs = $(`.number-dial-wrapper[ribbon-id=${ribbon.ID}] input`);
@@ -126,5 +130,33 @@ class UserPage {
         });
       }
     }
+  }
+
+  static submit_order(ribbon_id) {
+    let data = {ribbon: ribbon_id}
+    let inputs = UserPage.selection_section.find(`.number-dial-wrapper[ribbon-id=${ribbon_id}] input`);
+    inputs.each((index, element) => {
+      data[$(element).attr('name')] = $(element).val();
+    });
+
+    $.ajax({
+      url: '/api/orders',
+      method: 'POST',
+      data,
+      success: function(result, status) {
+        if (result.status != "success") {
+          alert(Ribbon.translations.page.ribbon_submit_error);
+          console.log("Error saving ribbon selection:", result)
+          return;
+        }
+
+        inputs.each((index, element) => {
+          $(element).attr('initial-value', data[$(element).attr('name')]);
+        });
+      },
+      error: function() {
+        alert(Ribbon.translations.page.ribbon_submit_error);
+      }
+    });
   }
 }

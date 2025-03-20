@@ -10,3 +10,6 @@ grunt Menig
 second NK
 leader Områdeleder
 total I alt
+
+#error
+ribbon_submit_error Der skete en fejl under registrering af sild
