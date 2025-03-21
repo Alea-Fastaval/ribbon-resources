@@ -1,13 +1,22 @@
 headline Velkommen til Fastavals sildemaskine
+no_access_headline Ingen Adgang
+no_access_message Du har ikke adgang til denne side
+
+#Buttons
 ok OK
 save Gem
 cancel Annuller
-login_error Brugernavn eller kode passer ikke
+delete Slet
+
+#Login dialog
 user_name Bruger ID
 password Kode
 login Log Ind
 logout Log Ud
-no_access_headline Ingen Adgang
-no_access_message Du har ikke adgang til denne side
+
+#links
 standard_link_text Gå til almindelig side
 admin_link_text Gå til admin side
+
+#Errors
+login_error Brugernavn eller kode passer ikke
