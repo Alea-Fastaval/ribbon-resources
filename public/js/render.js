@@ -187,7 +187,7 @@ class Render {
   static ribbon(info, colors) {
     let glyph_src = `/api/glyphs/${info.Glyph}?fg=${encodeURIComponent(colors.Glyph)}&bg=${encodeURIComponent(colors.Background)}`;
     let ribbon_element = $(
-    `<div class="ribbon-wrapper">
+    `<div class="ribbon-wrapper" ribbon-id="${info.ID}">
       <div class="ribbon-info"><div class="info-text">${info.desc}</div></div>
       <div class="ribbon"><img src="${glyph_src}"></div>
       <div class="ribbon-label">${info.name}</div>

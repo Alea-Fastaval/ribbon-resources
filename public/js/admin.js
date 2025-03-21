@@ -116,6 +116,13 @@ class Admin {
         ribbon.desc = Ribbon.translations.ribbons[ribbon.ID].desc;
         let ribbon_element = Render.ribbon(ribbon, category);
         ribbon_list.append(ribbon_element);
+
+        // Delete button
+        let delete_button = $(`<button class"ribbon-delete-button">${gt.delete}</button>`);
+        ribbon_element.append(delete_button);
+        delete_button.on('click', () => {
+          Admin.delete_ribbon(ribbon_element);
+        })
       }
     }
 
@@ -333,19 +340,63 @@ class Admin {
             return;
           }
           
+          // Remove edit dialog
           element.remove()
+
+          // Add new ribbon
           data.name = name;
           data.desc = desc;
           let category = Ribbon.category_by_id[data.Category];
           let ribbon_element = Render.ribbon(data, category);
-          Admin.categories_content.find(`#category-${data.Category}`).append(ribbon_element);
+          Admin.categories_content.find(`#category-${data.Category} .folding-section-content`).append(ribbon_element);
+
+          // Add translations
+          Ribbon.translations.ribbons[data.ID] = {
+            desc,
+            name,
+          }
+
+          // Delete button
+          let gt = Ribbon.translations.general
+          let delete_button = $(`<button class"ribbon-delete-button">${gt.delete}</button>`);
+          ribbon_element.append(delete_button);
+          delete_button.on('click', () => {
+            Admin.delete_ribbon(ribbon_element);
+          })
         },
         error: function() {
           alert(Ribbon.translations.page.ribbon_submit_error)
         }
       })   
     }
+  }
 
+  /**
+   * Delete a ribbon element
+   */
+  static delete_ribbon(element) {
+    let pt = Ribbon.translations.page;
+    let rt = Ribbon.translations.ribbons;
+    
+    let ribbon_id = element.attr('ribbon-id');
+    let text = `${pt.confirm_delete_ribbon} ${rt[ribbon_id].name}, ${rt[ribbon_id].desc} ?`
+    if (!confirm(text)) return
+
+    $.ajax({
+      url: '/api/ribbons/'+ribbon_id,
+      method: 'DELETE',
+      success: function(data, status) {
+        if (data.status == "error") {
+          alert(Ribbon.translations.page.ribbon_delete_error)
+          return;
+        }
+        
+        element.remove()
+      },
+      error: function() {
+        alert(Ribbon.translations.page.ribbon_delete_error)
+      }
+    })   
   }
 
   /**

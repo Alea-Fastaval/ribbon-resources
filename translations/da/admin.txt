@@ -27,6 +27,7 @@ name Navn
 description Beskrivelse
 select_glyph Vælg glyph
 no_wings Kun menige
+confirm_delete_ribbon Er du sikker på at du vil slette silden:
 
 #Languages
 da Dansk
@@ -35,6 +36,7 @@ en Engelsk
 #Errors
 resource_load_failed Kunne ikke hente {} fra serveren
 ribbon_submit_error Der skete en fejl under upload af sild
+ribbon_delete_error Der skete en fejl under sletning af sild
 read_glyph_error Kunne ikke læse indholdet af glyph filen
 glyph_elements_error Kunne ikke parse elementerne i glyphen
 glyph_upload_error Glyphen kunne ikke uploades
