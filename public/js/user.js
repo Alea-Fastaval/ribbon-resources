@@ -172,7 +172,11 @@ class UserPage {
       data,
       success: function(result, status) {
         if (result.status != "success") {
-          alert(Ribbon.translations.page.ribbon_submit_error);
+          let text = Ribbon.translations.page.ribbon_submit_error;
+          if (result.message) {
+            text += "\n"+message;
+          }
+          alert(text);
           console.log("Error saving ribbon selection:", result)
           return;
         }
@@ -188,8 +192,15 @@ class UserPage {
         // Refresh the preview
         Ribbon.load_resources(() => {UserPage.reload_preview()}, {orders: {}}, "/api/");
       },
-      error: function() {
-        alert(Ribbon.translations.page.ribbon_submit_error);
+      error: function(jqXHR) {
+        let text = Ribbon.translations.page.ribbon_submit_error;
+        if (jqXHR.responseText) {
+          let response = JSON.parse(jqXHR.responseText)
+          if (response && response.message) {
+            text += "\n" + response.message;
+          }
+        }
+        alert(text);
       }
     });
   }
@@ -200,7 +211,11 @@ class UserPage {
       method: 'DELETE',
       success: function(result, status) {
         if (result.status != "success") {
-          alert(Ribbon.translations.page.ribbon_delete_error);
+          let text = Ribbon.translations.page.ribbon_delete_error;
+          if (result.message) {
+            text += "\n"+message;
+          }
+          alert(text);
           console.log("Error deleting ribbon selection:", result)
           return;
         }
@@ -213,8 +228,15 @@ class UserPage {
 
         Ribbon.load_resources(() => {UserPage.reload_preview()}, {orders: {}}, "/api/");
       },
-      error: function() {
-        alert(Ribbon.translations.page.ribbon_delete_error);
+      error: function(jqXHR) {
+        let text = Ribbon.translations.page.ribbon_delete_error;
+        if (jqXHR.responseText) {
+          let response = JSON.parse(jqXHR.responseText)
+          if (response && response.message) {
+            text += "\n" + response.message;
+          }
+        }
+        alert(text);
       }
     });
   }
@@ -271,15 +293,26 @@ class UserPage {
       data,
       success: function(result, status) {
         if (result.status != "success") {
-          alert(Ribbon.translations.page.ribbon_move_error);
+          let text = Ribbon.translations.page.ribbon_move_error;
+          if (result.message) {
+            text += "\n"+message;
+          }
+          alert(text);
           console.log("Error moving ribbon selection:", result)
           return;
         }
 
         Ribbon.load_resources(() => {UserPage.reload_preview()}, {orders: {}}, "/api/");
       },
-      error: function() {
-        alert(Ribbon.translations.page.ribbon_move_error);
+      error: function(jqXHR) {
+        let text = Ribbon.translations.page.ribbon_move_error;
+        if (jqXHR.responseText) {
+          let response = JSON.parse(jqXHR.responseText)
+          if (response && response.message) {
+            text += "\n" + response.message;
+          }
+        }
+        alert(text);
       }
     });
   }
