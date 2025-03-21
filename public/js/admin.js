@@ -320,6 +320,7 @@ class Admin {
     }
 
     let name = data["name_"+page_info.lang];
+    let desc = data["desc_"+page_info.lang];
 
     if (id == 'new') {
       $.ajax({
@@ -334,6 +335,7 @@ class Admin {
           
           element.remove()
           data.name = name;
+          data.desc = desc;
           let category = Ribbon.category_by_id[data.Category];
           let ribbon_element = Render.ribbon(data, category);
           Admin.categories_content.find(`#category-${data.Category}`).append(ribbon_element);
