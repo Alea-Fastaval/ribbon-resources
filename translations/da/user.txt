@@ -1,5 +1,7 @@
 #Preview section
 preview Forhåndsvisning
+sorting Du kan trække og slippe for at ændre rækkefølgen på dine sild
+no_ribbons Du har ikke tilføjet nogen sild endnu
 
 #Selection section
 selection_header Tilføj sild til din sildesalat
@@ -13,3 +15,5 @@ total I alt
 
 #error
 ribbon_submit_error Der skete en fejl under registrering af sild
+ribbon_delete_error Der skete en fejl under sletning af sild
+ribbon_move_error Der skete en fejl under flytning af sild
