@@ -115,6 +115,7 @@ h1 {
   position: absolute;
   bottom: 1rem;
   display: block;
+  width: 15rem;
 
   color: var(--content-background);
   background-color: var(--subtle-color);
