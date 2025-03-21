@@ -67,7 +67,26 @@ class Ribbon {
     }
 
     if (level == 0 && Object.keys(list).length == 0) {
+      Ribbon.create_lookups();
       resources_loaded_callback();
+    }
+  }
+
+  static create_lookups() {
+    if (Ribbon.categories) {
+      Ribbon.category_by_id = {}
+      for (const category of Ribbon.categories) {
+        Ribbon.category_by_id[category.ID] = category
+      }
+    }
+
+    if (Ribbon.ribbons) {
+      Ribbon.ribbon_by_id = {}
+      for (const [category, list] of Object.entries(Ribbon.ribbons)) {
+        for (const ribbon of list) {
+          Ribbon.ribbon_by_id[ribbon.ID] = ribbon
+        }
+      }
     }
   }
 }

@@ -30,7 +30,6 @@ $(function() {
 
 class Admin {
   static translations = {}
-  static category_by_id = {}
 
   static render_page() {
     Render.init(Ribbon.translations);
@@ -91,8 +90,6 @@ class Admin {
     for (const cat_index in Ribbon.categories) {
       const category = Ribbon.categories[cat_index];
 
-      Admin.category_by_id[category.ID] = cat_index
-
       category.name = Ribbon.translations.categories[category.ID]
       let category_element = Render.category(category, 'closed');
       category_element.attr('cat-id', category.ID);
@@ -150,15 +147,6 @@ class Admin {
   //-------------------------------------------
   // Helper Functions
   //-------------------------------------------
-
-  /**
-   * Get a category definition from ID
-   */
-  static get_category_from_id(id) {
-    if (Admin.category_by_id[id]) {
-      return Ribbon.categories[Admin.category_by_id[id]]
-    }
-  }
 
   /**
    * Creates the content for the "New Category"-dialog
@@ -346,7 +334,7 @@ class Admin {
           
           element.remove()
           data.name = name;
-          let category = Admin.get_category_from_id(data.Category);
+          let category = Ribbon.category_by_id[data.Category];
           let ribbon_element = Render.ribbon(data, category);
           Admin.categories_content.find(`#category-${data.Category}`).append(ribbon_element);
         },
