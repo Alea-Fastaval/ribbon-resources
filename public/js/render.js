@@ -227,4 +227,45 @@ class Render {
 
     return dial_wrapper;
   }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  // Full ribbon display preview
+  //--------------------------------------------------------------------------------------------------------------------
+  static preview(orders) {
+    let wrapper = $('<div class="ribbon-preview-wrapper"></div>')
+    let order_entries = Object.entries(orders)
+    
+    if (order_entries.length == 0) {
+      wrapper.html(Ribbon.translations.page.no_ribbons);
+      return wrapper;
+    }
+
+    if (order_entries.length <= 4) {
+      wrapper.css({width: "calc(var(--ribbon-height) * 5)"})
+    } else if (order_entries.length <= 6){
+      wrapper.css({width: "calc(var(--ribbon-height) * 7.5)"})
+    } 
+
+    // Sort orders by position
+    let sorted = [];
+    for (const [_ ,order] of order_entries) {
+      sorted[order.position] = order;
+    }
+
+    // Add ribbons from order
+    for (const order of sorted) {
+      let ribbon = Ribbon.ribbon_by_id[order.ribbon_id];
+      let category = Ribbon.category_by_id[ribbon.Category];
+
+      let glyph_src = `/api/glyphs/${ribbon.Glyph}?fg=${encodeURIComponent(category.Glyph)}&bg=${encodeURIComponent(category.Background)}`;
+      let ribbon_element = $(`<div class="ribbon" ribbon-id="${ribbon.ID}"><img draggable="false" src="${glyph_src}"></div>`)
+      ribbon_element.css({
+        "--background-color": category.Background,
+        "--stripes-color": category.Stripes,
+        "--glyph-color": category.Glyph,
+      });
+      wrapper.append(ribbon_element)
+    }
+    return wrapper;
+  }
 }
