@@ -86,15 +86,29 @@ class UserPage {
       // Render Ribbons
       //-------------------------------------------
       if (Ribbon.ribbons[category.ID]) for (const ribbon of Ribbon.ribbons[category.ID]) {
+        // Get current ribbon order
+        let order = Ribbon.orders[ribbon.ID] ?? {}
+
         // Ribbon info
         ribbon.name = Ribbon.translations.ribbons[ribbon.ID].name;
         ribbon.desc = Ribbon.translations.ribbons[ribbon.ID].desc;
-        let ribbon_element = Render.ribbon(ribbon, category);
+        let ribbon_element = Render.ribbon(ribbon);
         ribbon_element.css('grid-column', 1);
         ribbon_list.append(ribbon_element);
 
+        function update_list_preview(values) {
+          let old_ribbon = ribbon_element.find(".ribbon");
+          let new_ribbon = Render.single_preview(values);
+          new_ribbon.insertBefore(old_ribbon);
+          old_ribbon.remove();
+        }
+
+        // Set preview
+        if (Ribbon.orders[ribbon.ID]) {
+          update_list_preview(order);
+        }
+
         // Number dials
-        let order = Ribbon.orders[ribbon.ID] ?? {}
         let grunt = Render.number_dial('grunt', order.grunt);
         grunt.css('grid-column', 2);
         grunt.attr('ribbon-id', ribbon.ID);
@@ -118,11 +132,9 @@ class UserPage {
         total_element.attr('ribbon-id', ribbon.ID);
         ribbon_list.append(total_element);
 
-        // Preview
-        
         // Save button
         let save_button = $(`<button class="ribbon-list-save-button">${gt.save}</button>`);
-        save_button.css('grid-column', 7);
+        save_button.css('grid-column', 6);
         save_button.attr('ribbon-id', ribbon.ID);
         save_button.prop('disabled', true);
         ribbon_list.append(save_button);
@@ -133,7 +145,7 @@ class UserPage {
         
         // Delete button
         let delete_button = $(`<button class="ribbon-list-delete-button">${gt.delete}</button>`);
-        delete_button.css('grid-column', 8);
+        delete_button.css('grid-column', 7);
         delete_button.attr('ribbon-id', ribbon.ID);
         delete_button.prop('disabled', Ribbon.orders[ribbon.ID] == undefined);
         ribbon_list.append(delete_button);
@@ -142,17 +154,21 @@ class UserPage {
           UserPage.delete_order(ribbon.ID);
         });
 
-        // Calculate total
+        // Calculate total and update single_preview
         let inputs = $(`.number-dial-wrapper[ribbon-id=${ribbon.ID}] input`);
         inputs.on('change', () => {
           let total = 0;
           let change = false;
+          let values = {ribbon_id: ribbon.ID};
           inputs.each((index, element) => {
             if ($(element).val() != $(element).attr('initial-value')) change = true;
             let value = parseInt($(element).val());
-            total += isNaN(value) ? 0 : value;
+            value = isNaN(value) ? 0 : value;
+            values[$(element).attr("name")] = value;
+            total += value;
           });
           total_element.html(total == 0 ? "" : total + " " + pt.years);
+          update_list_preview(values);
           save_button.prop('disabled', !change);
         });
       }
@@ -220,12 +236,21 @@ class UserPage {
           return;
         }
 
+        // Reset number dials
         let inputs = UserPage.selection_section.find(`.number-dial-wrapper[ribbon-id=${ribbon_id}] input`);
         inputs.each((index, element) => {
           $(element).attr('initial-value', 0);
           $(element).val(0);
         });
 
+        // Clear total and preview
+        UserPage.selection_section.find(`.ribbon-list-total[ribbon-id=${ribbon_id}]`).html("");
+        let old_ribbon = UserPage.selection_section.find(`.ribbon-wrapper[ribbon-id=${ribbon_id}] .ribbon`);
+        let new_ribbon = Render.single_preview({ribbon_id, grunt: 0});
+        new_ribbon.insertBefore(old_ribbon);
+        old_ribbon.remove();
+
+        // Refresh top preview
         Ribbon.load_resources(() => {UserPage.reload_preview()}, {orders: {}}, "/api/");
       },
       error: function(jqXHR) {

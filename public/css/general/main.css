@@ -41,8 +41,7 @@ h1 {
   align-self: center;
 }
 
-.category > .folding-section-header,
-.ribbon {
+.category > .folding-section-header {
   background-color: var(--background-color);
   color: var(--glyph-color);
 
@@ -92,15 +91,6 @@ h1 {
   
   height: var(--ribbon-height);
   width: calc(var(--ribbon-height) * 2.5);
-
-  justify-content: center;
-
-  padding: 2px 0;
-  box-sizing: border-box;
-}
-
-.ribbon img {
-  max-width: var(--ribbon-height);
 }
 
 .ribbon-info {

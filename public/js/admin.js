@@ -114,7 +114,7 @@ class Admin {
       if (Ribbon.ribbons[category.ID]) for (const ribbon of Ribbon.ribbons[category.ID]) {
         ribbon.name = Ribbon.translations.ribbons[ribbon.ID].name;
         ribbon.desc = Ribbon.translations.ribbons[ribbon.ID].desc;
-        let ribbon_element = Render.ribbon(ribbon, category);
+        let ribbon_element = Render.ribbon(ribbon);
         ribbon_list.append(ribbon_element);
 
         // Delete button
@@ -346,8 +346,7 @@ class Admin {
           // Add new ribbon
           data.name = name;
           data.desc = desc;
-          let category = Ribbon.category_by_id[data.Category];
-          let ribbon_element = Render.ribbon(data, category);
+          let ribbon_element = Render.ribbon(data);
           Admin.categories_content.find(`#category-${data.Category} .folding-section-content`).append(ribbon_element);
 
           // Add translations

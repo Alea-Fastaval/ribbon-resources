@@ -184,12 +184,11 @@ class Render {
   //--------------------------------------------------------------------------------------------------------------------
   // Ribbon
   //--------------------------------------------------------------------------------------------------------------------
-  static ribbon(info, colors) {
-    let glyph_src = `/api/glyphs/${info.Glyph}?fg=${encodeURIComponent(colors.Glyph)}&bg=${encodeURIComponent(colors.Background)}`;
+  static ribbon(info) {
     let ribbon_element = $(
     `<div class="ribbon-wrapper" ribbon-id="${info.ID}">
       <div class="ribbon-info"><div class="info-text">${info.desc}</div></div>
-      <div class="ribbon"><img src="${glyph_src}"></div>
+      <div class="ribbon"><img src="/api/ribbons/svg/${info.ID}"></div>
       <div class="ribbon-label">${info.name}</div>
     </div>`);
 
@@ -254,18 +253,29 @@ class Render {
 
     // Add ribbons from order
     for (const order of sorted) {
-      let ribbon = Ribbon.ribbon_by_id[order.ribbon_id];
-      let category = Ribbon.category_by_id[ribbon.Category];
-
-      let glyph_src = `/api/glyphs/${ribbon.Glyph}?fg=${encodeURIComponent(category.Glyph)}&bg=${encodeURIComponent(category.Background)}`;
-      let ribbon_element = $(`<div class="ribbon" ribbon-id="${ribbon.ID}"><img draggable="false" src="${glyph_src}"></div>`)
-      ribbon_element.css({
-        "--background-color": category.Background,
-        "--stripes-color": category.Stripes,
-        "--glyph-color": category.Glyph,
-      });
-      wrapper.append(ribbon_element)
+      let ribbon_element = Render.single_preview(order);
+      wrapper.append(ribbon_element);
     }
     return wrapper;
+  }
+
+  static single_preview(order) {
+    let ribbon = Ribbon.ribbon_by_id[order.ribbon_id];
+
+    let years = order.grunt;
+    let extra_params = "";
+    if (!ribbon.NoWings) {
+      if (order.second) {
+        years += order.second;
+        extra_params += "&second="+order.second;
+      }
+      if (order.leader) {
+        years += order.leader;
+        extra_params += "&leader="+order.leader;
+      }
+    }
+
+    let img_src = `/api/ribbons/svg/${ribbon.ID}?seniority=${years}` + extra_params;
+    return $(`<div class="ribbon" ribbon-id="${ribbon.ID}"><img draggable="false" src="${img_src}"></div>`);
   }
 }
