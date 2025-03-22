@@ -171,6 +171,11 @@ class UserPage {
           update_list_preview(values);
           save_button.prop('disabled', !change);
         });
+
+        // Update totals and preview if we have an existing order
+        if (Ribbon.orders[ribbon.ID]) {
+          grunt.find('input').change();
+        }
       }
     }
   }
