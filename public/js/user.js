@@ -144,6 +144,13 @@ class UserPage {
         let orders = Ribbon.orders.list ?? {} 
         let order = orders[ribbon.ID] ?? {}
 
+        // Set category as open if we have orders inside
+        if (orders[ribbon.ID]) {
+          category_element.removeClass('closed');
+          category_element.addClass('open');
+          category_element.find('.folding-section-content').show();
+        }
+
         // Ribbon info
         ribbon.name = Ribbon.translations.ribbons[ribbon.ID].name;
         ribbon.desc = Ribbon.translations.ribbons[ribbon.ID].desc;

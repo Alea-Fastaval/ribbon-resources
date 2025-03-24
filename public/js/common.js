@@ -76,17 +76,17 @@ class Ribbon {
 
   static create_lookups() {
     if (Ribbon.categories) {
-      Ribbon.category_by_id = {}
+      Ribbon.category_by_id = {};
       for (const category of Ribbon.categories) {
-        Ribbon.category_by_id[category.ID] = category
+        Ribbon.category_by_id[category.ID] = category;
       }
     }
 
     if (Ribbon.ribbons) {
-      Ribbon.ribbon_by_id = {}
+      Ribbon.ribbon_by_id = {};
       for (const [category, list] of Object.entries(Ribbon.ribbons)) {
         for (const ribbon of list) {
-          Ribbon.ribbon_by_id[ribbon.ID] = ribbon
+          Ribbon.ribbon_by_id[ribbon.ID] = ribbon;
         }
       }
     }
