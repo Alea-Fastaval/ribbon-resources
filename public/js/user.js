@@ -53,8 +53,8 @@ class UserPage {
     let text_wrapper = $('<div class="preview-text-wrapper"></div>');
     preview_content1.append(text_wrapper);
 
-    text_wrapper.append(`<p class="explanation-text">${Ribbon.translations.page.width}:</p>`);
-    text_wrapper.append(`<p class="explanation-text">${Ribbon.translations.page.sorting}:</p>`);
+    text_wrapper.append(`<p class="explanation-text">${Ribbon.translations.page.width}</p>`);
+    text_wrapper.append(`<p class="explanation-text">${Ribbon.translations.page.sorting}</p>`);
 
     // GUI elements wrapper
     let preview_wrapper = $('<div class="ribbon-preview-wrapper"></div>');
@@ -85,7 +85,7 @@ class UserPage {
     UserPage.preview_section.append(preview_content2);
 
     // Bottom explanation text
-    preview_content2.append(`<p class="explanation-text">${Ribbon.translations.page.lock}:</p>`);
+    preview_content2.append(`<p class="explanation-text">${Ribbon.translations.page.lock}</p>`);
 
     let preview_wrapper2 = $('<div class="ribbon-preview-wrapper"></div>');
     preview_content2.append(preview_wrapper2);
