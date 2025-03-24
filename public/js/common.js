@@ -4,6 +4,8 @@ class Ribbon {
   static translations = {}
   static category_by_id = {}
 
+  static rv = 1 // Ribbon version for cache
+
   static load_resources(resources_loaded_callback, list, path, into = Ribbon, keys = []) {
     Ribbon.pending_list = list;
     Ribbon.load(resources_loaded_callback, list, path, into, keys);
