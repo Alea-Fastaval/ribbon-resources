@@ -1,5 +1,6 @@
 body {
   background-color: var(--body-background);
+  --ribbon-columns: 4;
 }
 
 .main-container {
@@ -72,7 +73,7 @@ h1 {
 }
 
 .ribbon-preview-wrapper {
-  width: calc(var(--ribbon-height) * 10);
+  width: calc(var(--ribbon-height) * var(--ribbon-columns) * 2.5);
 
   margin-left: auto;
   margin-right: auto;

@@ -56,7 +56,7 @@ class UserPage {
 
     // Adjust width
     column_selection.on('input', () => {
-      preview.css({width: `calc(var(--ribbon-height) * ${2.5*column_selection.val()})`})
+      $('body').css({'--ribbon-columns': column_selection.val()});
     });
     column_selection.on('change', () => {
       UserPage.set_columns(column_selection.val())
