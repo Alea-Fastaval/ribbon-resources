@@ -2,6 +2,8 @@ headline Velkommen til Fastavals sildemaskine
 no_access_headline Ingen Adgang
 no_access_message Du har ikke adgang til denne side
 
+cookie_text Vi bruger en session cookie til at huske hvis du er logget ind. Vi bruger ikke 3.parts eller tracking cookies. Hvis du logger ind accepterer du at vi sætter denne cookie.
+
 #Buttons
 ok OK
 save Gem

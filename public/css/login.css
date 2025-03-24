@@ -1,11 +1,18 @@
 .login-box {
-  width: fit-content;
-  margin: auto;
-  margin-top: 50px;
+  margin-top: 3rem;
   padding: 1rem;
 
   background-color: var(--highlight-color);
   border-radius: var(--rounding);
+
+  box-sizing: border-box;
+}
+
+.login-box,
+.cookie-text {
+  width: 25rem;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .login-box #login-button {
