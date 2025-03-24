@@ -271,7 +271,7 @@ class Render {
       }
     }
 
-    let img_src = `/api/ribbons/svg/${ribbon.ID}?seniority=${years}&v=v=${Ribbon.rv}` + extra_params;
+    let img_src = `/api/ribbons/svg/${ribbon.ID}?seniority=${years}&v=${Ribbon.rv}` + extra_params;
     return $(`<div class="ribbon" ribbon-id="${ribbon.ID}"><img draggable="false" src="${img_src}"></div>`);
   }
 }
