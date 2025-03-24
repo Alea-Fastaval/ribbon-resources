@@ -66,24 +66,10 @@ h1 {
   margin: 0 1rem;
 }
 
-.ribbon-wrapper,
-.ribbon-preview-wrapper {
+.ribbon-wrapper {
+  gap: .5rem;
   display: flex;
   margin-bottom: 1rem;
-}
-
-.ribbon-preview-wrapper {
-  width: calc(var(--ribbon-height) * var(--ribbon-columns) * 2.5);
-
-  margin-left: auto;
-  margin-right: auto;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.ribbon-wrapper {
-  --ribbon-height: 2rem;
-  gap: .5rem;
 }
 
 .ribbon {

@@ -230,13 +230,15 @@ class Render {
   //--------------------------------------------------------------------------------------------------------------------
   // Full ribbon display preview
   //--------------------------------------------------------------------------------------------------------------------
-  static preview(orders) {
-    let wrapper = $('<div class="ribbon-preview-wrapper"></div>')
+  static preview() {
+    let orders = Ribbon.orders.list ?? {}
+
+    let preview = $('<div class="ribbon-preview"></div>')
     let order_entries = Object.entries(orders)
     
     if (order_entries.length == 0) {
-      wrapper.html(Ribbon.translations.page.no_ribbons);
-      return wrapper;
+      preview.html(Ribbon.translations.page.no_ribbons);
+      return preview;
     }
 
     // Sort orders by position
@@ -248,9 +250,9 @@ class Render {
     // Add ribbons from order
     for (const order of sorted) {
       let ribbon_element = Render.single_preview(order);
-      wrapper.append(ribbon_element);
+      preview.append(ribbon_element);
     }
-    return wrapper;
+    return preview;
   }
 
   static single_preview(order) {
