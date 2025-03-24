@@ -45,6 +45,10 @@
   content: "\f3c1";
 }
 
+.ribbon-explanation {
+  width: 80%;
+  margin: 0 auto 2rem auto;
+}
 
 .ribbon-list {
   display: grid;

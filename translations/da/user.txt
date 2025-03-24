@@ -7,6 +7,7 @@ lock Click på låsen for at vise at du er færdig med din sildesalat og vi kan 
 
 #Selection section
 selection_header Tilføj sild til din sildesalat
+explanation Nedenfor vælger du de sild du har gjort dig fortjent til, for hver sild skal du vælge hvor mange år du har haft forskellige roller. Men husk at et område kun kan give én sild, du kan altså ikke både få Regnskab og Tirsdags-silden for at lave regnskab om tirsdagen efter Fastaval.
 
 #Ribbon list
 years år

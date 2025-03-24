@@ -108,6 +108,7 @@ class UserPage {
     //-------------------------------------------
     UserPage.selection_section = $('#selection-section');
     UserPage.selection_section.append(`<h3>${Ribbon.translations.page.selection_header}:</h3>`);
+    UserPage.selection_section.append(`<p class="ribbon-explanation">${Ribbon.translations.page.explanation}</p>`);
 
     //-------------------------------------------
     // Render Categories
