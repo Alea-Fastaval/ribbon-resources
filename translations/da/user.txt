@@ -1,5 +1,6 @@
 #Preview section
 preview Forhåndsvisning
+width Hvor bred skal din sildesalat være?
 sorting Du kan trække og slippe for at ændre rækkefølgen på dine sild
 no_ribbons Du har ikke tilføjet nogen sild endnu
 
@@ -17,3 +18,4 @@ total I alt
 ribbon_submit_error Der skete en fejl under registrering af sild
 ribbon_delete_error Der skete en fejl under sletning af sild
 ribbon_move_error Der skete en fejl under flytning af sild
+ribbon_column_error Der skete en fejl og vi kunne ikke gemme bredden på din sildesalat

@@ -1,3 +1,13 @@
+.column-select {
+  display: block;
+  margin: -2rem auto 1rem auto;;
+
+  position: relative;
+  left: calc(var(--ribbon-height) * 3.75);
+  width: calc(var(--ribbon-height) * 5 + 22px);
+  box-sizing: border-box;
+}
+
 .ribbon-list {
   display: grid;
   row-gap: 1rem;

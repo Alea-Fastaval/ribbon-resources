@@ -72,7 +72,6 @@ h1 {
 }
 
 .ribbon-preview-wrapper {
-  --ribbon-height: 2rem;
   width: calc(var(--ribbon-height) * 10);
 
   margin-left: auto;

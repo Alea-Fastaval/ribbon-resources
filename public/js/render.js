@@ -239,12 +239,6 @@ class Render {
       return wrapper;
     }
 
-    if (order_entries.length <= 4) {
-      wrapper.css({width: "calc(var(--ribbon-height) * 5)"})
-    } else if (order_entries.length <= 6){
-      wrapper.css({width: "calc(var(--ribbon-height) * 7.5)"})
-    } 
-
     // Sort orders by position
     let sorted = [];
     for (const [_ ,order] of order_entries) {

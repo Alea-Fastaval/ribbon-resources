@@ -7,3 +7,6 @@ CREATE TABLE users (
   PRIMARY KEY (id),
   UNIQUE KEY users_participant_year (participant_id, year)
 ) ENGINE=InnoDB CHARSET=utf8mb4;
+
+ALTER TABLE users ADD columns INT UNSIGNED NOT NULL DEFAULT 4;
+ALTER TABLE users ADD status text NOT NULL;

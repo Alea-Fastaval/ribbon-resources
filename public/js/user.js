@@ -43,11 +43,28 @@ class UserPage {
     //-------------------------------------------
     UserPage.preview_section = $('#preview-section');
     UserPage.preview_section.append(`<h3>${Ribbon.translations.page.preview}:</h3>`);
-    UserPage.preview_section.append(`<p>${Ribbon.translations.page.sorting}:</p>`);
 
-    let preview = Render.preview(Ribbon.orders);
+    // Column slider
+    UserPage.preview_section.append(`<p>${Ribbon.translations.page.width}:</p>`);
+    let column_selection = $(`<input class="column-select" type="range" min="1" max="5" step="1">`)
+    UserPage.preview_section.append(column_selection);
+
+    // Visual preview
+    let preview = Render.preview(Ribbon.orders.list);
     UserPage.preview_section.append(preview);
     UserPage.init_preview_dragging(preview);
+
+    // Adjust width
+    column_selection.on('input', () => {
+      preview.css({width: `calc(var(--ribbon-height) * ${2.5*column_selection.val()})`})
+    });
+    column_selection.on('change', () => {
+      UserPage.set_columns(column_selection.val())
+    });
+    column_selection.val(Ribbon.orders.settings.columns);
+    column_selection.trigger("input");
+
+    UserPage.preview_section.append(`<p>${Ribbon.translations.page.sorting}:</p>`);
 
     //-------------------------------------------
     // Selection Section
@@ -87,7 +104,7 @@ class UserPage {
       //-------------------------------------------
       if (Ribbon.ribbons[category.ID]) for (const ribbon of Ribbon.ribbons[category.ID]) {
         // Get current ribbon order
-        let order = Ribbon.orders[ribbon.ID] ?? {}
+        let order = Ribbon.orders.list[ribbon.ID] ?? {}
 
         // Ribbon info
         ribbon.name = Ribbon.translations.ribbons[ribbon.ID].name;
@@ -104,7 +121,7 @@ class UserPage {
         }
 
         // Set preview
-        if (Ribbon.orders[ribbon.ID]) {
+        if (Ribbon.orders.list[ribbon.ID]) {
           update_list_preview(order);
         }
 
@@ -147,7 +164,7 @@ class UserPage {
         let delete_button = $(`<button class="ribbon-list-delete-button">${gt.delete}</button>`);
         delete_button.css('grid-column', 7);
         delete_button.attr('ribbon-id', ribbon.ID);
-        delete_button.prop('disabled', Ribbon.orders[ribbon.ID] == undefined);
+        delete_button.prop('disabled', Ribbon.orders.list[ribbon.ID] == undefined);
         ribbon_list.append(delete_button);
         delete_button.on("click", () => {
           delete_button.prop('disabled', true);
@@ -173,7 +190,7 @@ class UserPage {
         });
 
         // Update totals and preview if we have an existing order
-        if (Ribbon.orders[ribbon.ID]) {
+        if (Ribbon.orders.list[ribbon.ID]) {
           grunt.find('input').change();
         }
       }
@@ -273,7 +290,7 @@ class UserPage {
 
   static reload_preview() {
     let old_preview = UserPage.preview_section.find('.ribbon-preview-wrapper');
-    let new_preview = Render.preview(Ribbon.orders);
+    let new_preview = Render.preview(Ribbon.orders.list);
 
     new_preview.insertBefore(old_preview);
     old_preview.remove();
@@ -343,6 +360,26 @@ class UserPage {
           }
         }
         alert(text);
+      }
+    });
+  }
+
+  static set_columns(columns) {
+    $.ajax({
+      url: '/api/orders/columns',
+      method: 'POST',
+      data: {
+        value: columns
+      },
+      success: function(result, status) {
+        if (result.status != "success") {
+          alert(Ribbon.translations.page.ribbon_column_error);
+          console.log("Error moving ribbon selection:", result)
+          return;
+        }
+      },
+      error: function() {
+        alert(Ribbon.translations.page.ribbon_column_error);
       }
     });
   }
