@@ -4,6 +4,13 @@ no_access_message Du har ikke adgang til denne side
 
 cookie_text Vi bruger en session cookie til at huske hvis du er logget ind. Vi bruger ikke 3.parts eller tracking cookies. Hvis du logger ind accepterer du at vi sætter denne cookie.
 
+explanation_button Hvad er en sildesalat?
+long_explanation1 Sildesalat er et ordenssystem man kan sætte på brystet, der viser hvilke opgaver man har påtaget sig for Fastaval gennem årene. 
+long_explanation2 Hver orden er fortrinsvist arrangørposter, men der kan være enkelte opgaver, der ikke kræver at man er arrangør, f.eks giver det at være spilleder, eller at deltage i vidunder-mandag (oprydning efter Fastaval) også hjemmel for en "sild". 
+long_explanation3 Sildesalaten er tillidsbaseret, og vi antager selvfølgelig, at du udfylder skemaet med den respekt for de som gør en forskel for Fastaval som de fortjener.
+long_explanation4 På din sild vil barrene eller stjernerne i siderne fortælle hvor mange år du har været aktiv i området. Mens de bagved liggende vinger beskriver om du har været hovedansvarlig eller næstkommanderende (NK).
+long_explanation5 Flere områder er uden hovedansvarlige eller NK. Dette er som regel mindre ansvarsområder, Her indmelder man blot år som "menig".
+
 #Buttons
 ok OK
 save Gem

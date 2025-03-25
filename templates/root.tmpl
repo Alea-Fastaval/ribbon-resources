@@ -20,12 +20,21 @@
   </head>
   <body>
     <div class="main-container">
+      <div id="explanation-link-wrapper">
+        <a href="/">{{ .Explanation_link_text}}</a>
+      </div>
       <div class="main-content">
         {{.Content}}
       </div>
       <img id="fastaval-logo" src="/public/img/logo-plain-text.png">
       <div id="signature">
         Created by Mikkel Westh (Fastaval IT)
+      </div>
+    </div>
+    <div id="long-explanation">
+      <div class="text-dialog">
+        <h2>{{ .Explanation_link_text}}</h2>
+        <p>{{ .Long_explanation }}</p>
       </div>
     </div>
   </body>

@@ -1,10 +1,26 @@
 "use strict";
 
+$(function() {
+  Ribbon.init()
+});
+
 class Ribbon {
   static translations = {}
   static category_by_id = {}
 
   static rv = 1 // Ribbon version for cache
+
+  static init() {
+    $('#explanation-link-wrapper a').on('click', (evt) => {
+      evt.preventDefault();
+      $('#long-explanation').addClass('open');
+    });
+
+    $('#long-explanation').on('click', (evt) => {
+      evt.stopPropagation();
+      $('#long-explanation').removeClass('open');
+    });
+  }
 
   static load_resources(resources_loaded_callback, list, path, into = Ribbon, keys = []) {
     Ribbon.pending_list = list;
