@@ -5,6 +5,7 @@ $(function() {
   let resources = {
     categories: {},
     ribbons: {},
+    orders: {},
     translations: {
       _sub_list: true,
       page: {
@@ -38,6 +39,16 @@ class Admin {
     let gt = Ribbon.translations.general;
 
     let main_element = $(".main-content");
+
+    let count_table = $(
+      `<table><tbody>
+        <tr><td>${pt.accounts}</td><td>${Ribbon.orders.counts.users[2025]}</td></tr>
+        <tr><td>${pt.orders}</td><td>${Ribbon.orders.counts.orders[2025]}</td></tr>
+        <tr><td>${pt.closed}</td><td>${Ribbon.orders.counts.closed[2025]}</td></tr>
+      </tbody></table>`
+    );
+
+    main_element.append(count_table);
 
     //-------------------------------------------
     // Glyph Selection Dialog

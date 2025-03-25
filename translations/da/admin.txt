@@ -1,5 +1,10 @@
 headline Administration af sildemaskine
 
+#Counters
+accounts Antal brugere der har være logget ind
+orders Antal brugere der har tilføjet mindst én sild
+closed Antal brugere der har angivet deres sildesalat er færdig
+
 #Attributes
 name_da Dansk navn
 name_en Engelsk navn
