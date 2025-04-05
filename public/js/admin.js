@@ -76,6 +76,10 @@ class Admin {
           window.open(data.download_file,'_blank');
         },
         error: function() {
+          export_button.removeClass('busy');
+          export_button.html(pt.export_link);
+          export_button.prop('disabled', false);
+
           alert(pt.export_error);
         },
         timeout: 10000
