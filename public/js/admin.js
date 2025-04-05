@@ -82,7 +82,7 @@ class Admin {
 
           alert(pt.export_error);
         },
-        timeout: 10000
+        timeout: 3*60*1000
       })
     })
     overview_tab.append(export_button);
