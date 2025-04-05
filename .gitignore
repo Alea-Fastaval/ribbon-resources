@@ -2,5 +2,8 @@ log.txt
 templates/glyphs/*
 sessions/*
 keys/*
+tmp/*
+!tmp/*/
+tmp/ribbons/*
 
 !**/.gitkeep
