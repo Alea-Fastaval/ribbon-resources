@@ -1,5 +1,11 @@
 headline Administration af sildemaskine
 
+#Navigation
+settings_button Indstillinger
+overview_button Oversigt
+
+export_link Eksporter til PDF
+
 #Counters
 accounts Antal brugere der har være logget ind
 orders Antal brugere der har tilføjet mindst én sild

@@ -39,16 +39,29 @@ class Admin {
     let gt = Ribbon.translations.general;
 
     let main_element = $(".main-content");
+    //-------------------------------------------
+    // Overview
+    //-------------------------------------------
+    let overview_tab = $('<div class="tab" id="overview-tab"></div>');
+    main_element.append(overview_tab);
 
     let count_table = $(
-      `<table><tbody>
+      `<table id="stats-table"><tbody>
         <tr><td>${pt.accounts}</td><td>${Ribbon.orders.counts.users[2025]}</td></tr>
         <tr><td>${pt.orders}</td><td>${Ribbon.orders.counts.orders[2025]}</td></tr>
         <tr><td>${pt.closed}</td><td>${Ribbon.orders.counts.closed[2025]}</td></tr>
       </tbody></table>`
     );
+    overview_tab.append(count_table);
 
-    main_element.append(count_table);
+    let export_link = $(`<a href="/api/export" target="_blank" class="button export-button" >${pt.export_link}</a>`);
+    overview_tab.append(export_link);
+
+    //-------------------------------------------
+    // Settings
+    //-------------------------------------------
+    let settings_tab = $('<div class="tab" id="settings-tab"></div>');
+    main_element.append(settings_tab);
 
     //-------------------------------------------
     // Glyph Selection Dialog
@@ -58,7 +71,7 @@ class Admin {
     Admin.glyph_select_dialog.on('cancel', () => {
       Admin.glyph_select_dialog.listeners['ok'] = [];
     });
-    main_element.append(Admin.glyph_select_dialog);
+    settings_tab.append(Admin.glyph_select_dialog);
 
     Admin.glyph_select_dialog.update = function() {
       glyph_select_content.html("");
@@ -77,7 +90,7 @@ class Admin {
     //-------------------------------------------
     Admin.categories_content = $("<div></div>")
     let categories_element = Render.foldingSection(pt.categories, Admin.categories_content, 'closed');
-    main_element.append(categories_element);
+    settings_tab.append(categories_element);
 
     //-------------------------------------------
     // New Category
@@ -89,7 +102,7 @@ class Admin {
 
     let category_dialog = Render.dialog(pt.new_category, category_dialog_content);
     category_dialog.on('ok', Admin.submit_new_category);
-    main_element.append(category_dialog);
+    settings_tab.append(category_dialog);
 
     new_category_button.on('click', () => {
       category_dialog.open();
@@ -142,7 +155,7 @@ class Admin {
     //-------------------------------------------
     Admin.glyph_content  = $("<div></div>");
     let glyph_element = Render.foldingSection(pt.glyphs, Admin.glyph_content, 'closed');
-    main_element.append(glyph_element);
+    settings_tab.append(glyph_element);
 
     let new_glyph_button = $(`<div class="button action-button">${pt.new_glyph}</div>`);
     Admin.glyph_content.append(new_glyph_button);
@@ -150,7 +163,7 @@ class Admin {
     let glyph_dialog_content = Admin.new_glyph_dialog_content();
     let glyph_dialog = Render.dialog(pt.new_glyph, glyph_dialog_content);
     glyph_dialog.on('ok', Admin.submit_new_glyph)
-    main_element.append(glyph_dialog);
+    settings_tab.append(glyph_dialog);
 
     new_glyph_button.on('click', () => {
       glyph_dialog.open();
@@ -160,11 +173,31 @@ class Admin {
     Admin.glyph_content.append(glyph_display);
 
     Admin.load_glyphs();
+
+    //-------------------------------------------
+    // Navigation
+    //-------------------------------------------
+    let nav_section = $('nav');
+    let settings_button = $(`<button class="button nav-button" tab="settings-tab">${pt.settings_button}</button>`);
+    settings_button.on('click', () => {Admin.nav_click(settings_button)})
+    nav_section.append(settings_button);
+
+    let overview_button = $(`<button class="button nav-button" tab="overview-tab">${pt.overview_button}</button>`);
+    overview_button.on('click', () => {Admin.nav_click(overview_button)})
+    nav_section.append(overview_button);
+
+    Admin.nav_click(settings_button)
   }
 
   //-------------------------------------------
   // Helper Functions
   //-------------------------------------------
+  static nav_click(button) {
+    $('.tab').hide();
+    $('nav button').removeClass('active');
+    $(`#${button.attr('tab')}`).show();
+    button.addClass('active');
+  }
 
   /**
    * Creates the content for the "New Category"-dialog
