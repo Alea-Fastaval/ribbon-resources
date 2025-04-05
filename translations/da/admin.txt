@@ -51,4 +51,5 @@ ribbon_delete_error Der skete en fejl under sletning af sild
 read_glyph_error Kunne ikke læse indholdet af glyph filen
 glyph_elements_error Kunne ikke parse elementerne i glyphen
 glyph_upload_error Glyphen kunne ikke uploades
+export_error Der skete en fejl under export til PDF
 

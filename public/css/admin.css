@@ -32,6 +32,31 @@ nav {
   border-radius: var(--rounding);
 }
 
+.export-button.busy::after {
+  display: block;
+  font-family: "Font Awesome 6 Free";
+  font-weight: bold;
+  content: "\f013";
+  -webkit-animation:spin 4s linear infinite;
+  -moz-animation:spin 4s linear infinite;
+  animation:spin 4s linear infinite;
+}
+
+@-moz-keyframes spin { 
+  100% { -moz-transform: rotate(360deg); } 
+}
+
+@-webkit-keyframes spin { 
+  100% { -webkit-transform: rotate(360deg); } 
+}
+
+@keyframes spin { 
+  100% { 
+      -webkit-transform: rotate(360deg); 
+      transform:rotate(360deg); 
+  } 
+}
+
 .ribbon-info {
   margin-bottom: 1rem;
 }

@@ -54,8 +54,34 @@ class Admin {
     );
     overview_tab.append(count_table);
 
-    let export_link = $(`<a href="/api/export" target="_blank" class="button export-button" >${pt.export_link}</a>`);
-    overview_tab.append(export_link);
+    let export_button = $(`<button class="button export-button">${pt.export_link}</button>`);
+    export_button.on('click', () => {
+      export_button.prop('disabled', true);
+      export_button.html('');
+      export_button.addClass('busy');
+      
+      $.ajax({
+        url: "api/export",
+        success: function(data, status) {
+          export_button.removeClass('busy');
+          export_button.html(pt.export_link);
+          export_button.prop('disabled', false);
+          
+          if (data.status != 'success') {
+            console.log('Export result', data);
+            alert(pt.export_error);
+            return;
+          }
+
+          window.open(data.download_file,'_blank');
+        },
+        error: function() {
+          alert(pt.export_error);
+        },
+        timeout: 10000
+      })
+    })
+    overview_tab.append(export_button);
 
     //-------------------------------------------
     // Settings
