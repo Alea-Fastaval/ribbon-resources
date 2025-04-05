@@ -6,4 +6,5 @@
 
   --rounding: .5rem;
   --ribbon-height: 2rem;
+  --ribbon-width: calc(var(--ribbon-height)/85*250);
 }

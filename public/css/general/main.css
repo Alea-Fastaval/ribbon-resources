@@ -130,7 +130,7 @@ h1 {
   display: flex;
   
   height: var(--ribbon-height);
-  width: calc(var(--ribbon-height) * 2.5);
+  width: var(--ribbon-width);
 }
 
 .ribbon-info {

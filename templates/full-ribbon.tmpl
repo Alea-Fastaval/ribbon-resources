@@ -1,18 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 250 84">
   <rect x="0" y="0" width="100%" height="100%" fill="{{ .background}}" />
   {{- if .seniority}}
   <symbol id="seniority">
     {{ .seniority}}
   </symbol>
-  <use href="#seniority" />
-  <use href="#seniority" transform="scale(-1, 1) translate(-200, 0)"/>
+  <use xlink:href="#seniority" />
+  <use xlink:href="#seniority" transform="scale(-1, 1) translate(-250, 0)"/>
   {{- end }}
   {{- if .wings }}
-  <svg xmlns="http://www.w3.org/2000/svg" x="47" width="106">
+  <svg xmlns="http://www.w3.org/2000/svg" x="62" width="126">
     {{ .wings}}
   </svg>
   {{- end }}
-  <svg xmlns="http://www.w3.org/2000/svg" x="47" width="106" y="6" height="68">
+  <svg xmlns="http://www.w3.org/2000/svg" x="62" width="126" y="7" height="70">
     {{ .glyph }}
   </svg>
 </svg>

@@ -1,12 +1,12 @@
 .preview-text-wrapper,
 #preview-section .preview-content > .explanation-text {
   display: inline-block;
-  max-width: calc(50% - 6.75 * var(--ribbon-height));
+  max-width: calc(50% - 2.5 * var(--ribbon-width));
 }
 
 .ribbon-preview-wrapper {
   display: inline-block;
-  width: calc(var(--ribbon-height) * 12.5);
+  width: calc(var(--ribbon-width) * 5);
   vertical-align: top;
 }
 
@@ -15,15 +15,15 @@
   margin: 1rem auto;
 
   position: relative;
-  left: calc(var(--ribbon-height) * 3.75);
-  width: calc(var(--ribbon-height) * 5 + 22px);
+  left: calc(var(--ribbon-width) * 1.5);
+  width: calc(var(--ribbon-width) * 2 + 22px);
 }
 
 .ribbon-preview {
   display: flex;
   margin: auto;
 
-  width: calc(var(--ribbon-height) * var(--ribbon-columns) * 2.5);
+  width: calc(var(--ribbon-width) * var(--ribbon-columns));
 
   flex-wrap: wrap;
   justify-content: center;
