@@ -3,7 +3,7 @@ preview Forhåndsvisning
 width Hvor bred skal din sildesalat være?
 sorting Du kan trække og slippe for at ændre rækkefølgen på dine sild
 no_ribbons Du har ikke tilføjet nogen sild endnu
-lock Click på låsen for at vise at du er færdig med din sildesalat og vi kan gå igang med at lave den
+lock Klik på låsen for at vise at du er færdig med din sildesalat og vi kan gå igang med at lave den
 
 #Selection section
 selection_header Tilføj sild til din sildesalat
