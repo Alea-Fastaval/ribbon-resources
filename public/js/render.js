@@ -160,6 +160,71 @@ class Render {
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  // Custom Alert
+  //--------------------------------------------------------------------------------------------------------------------
+  static alert(title, text, buttons, cancel_button = true) {
+    let gt = Render.translations.general;
+
+    let alert_wrapper = $('<div class="dialog-wrapper closed"></div>');
+
+    //Open
+    alert_wrapper.open = function() {
+      alert_wrapper.removeClass('closed');
+      alert_wrapper.addClass('open');
+    }
+
+    // Close
+    alert_wrapper.close = function() {
+      alert_wrapper.removeClass('open');
+      alert_wrapper.addClass('closed');
+    }
+
+    // Content
+    let alert = $('<div class="dialog"></div>');
+    alert_wrapper.append(alert);
+
+    let alert_header = $(`
+      <div class="dialog-header">
+        <div class="dialog-title">${title}</div>
+      </div>
+    `);
+    alert.append(alert_header);
+
+    let alert_close_icon = $('<div class="dialog-close-icon"></div>');
+    alert_header.append(alert_close_icon);
+
+    let alert_content = $(`<div class="dialog-content"></div>"`);
+    alert_content.append(text);
+    alert.append(alert_content);
+
+    let alert_footer = $('<div class="dialog-footer"></div>');
+    alert.append(alert_footer);
+
+    alert_close_icon.on('click', () => {
+      alert_wrapper.close();
+    })
+
+    if (buttons == undefined || !Array.isArray(buttons)) {
+      let ok_button = $(`<div class="dialog-button" >${gt.ok}</div>`);
+      alert_footer.append(ok_button);
+      ok_button.on('click', () => {alert_wrapper.close()});
+      return alert_wrapper;
+    }
+
+    if (cancel_button) {
+      let cancel_button = $(`<div class="dialog-button" >${gt.cancel}</div>`);
+      alert_footer.append(cancel_button);
+      cancel_button.on('click', () => {alert_wrapper.close()});
+    }
+
+    for (const button of buttons) {
+      alert_footer.append(button);
+    }
+
+    return alert_wrapper;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
   // Category
   //--------------------------------------------------------------------------------------------------------------------
   static category(info, default_state) {

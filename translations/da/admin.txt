@@ -4,6 +4,12 @@ headline Administration af sildemaskine
 settings_button Indstillinger
 overview_button Oversigt
 
+#export
+export_text1 Den sidste eksportfil er
+export_text2 minutter gammel.<br>Vil du hente den eller oprette en ny?<br>(Hvis du lige har trykket på opret knappen, er den måske stadig i gang med export).
+export_create Opret Ny
+export_download Hent
+
 export_link Eksporter til PDF
 
 #Counters
@@ -52,4 +58,5 @@ read_glyph_error Kunne ikke læse indholdet af glyph filen
 glyph_elements_error Kunne ikke parse elementerne i glyphen
 glyph_upload_error Glyphen kunne ikke uploades
 export_error Der skete en fejl under export til PDF
+export_time_error Kunne ikke finde en eksisterende eksport-fil.<br>Vil du oprette en ny?
 

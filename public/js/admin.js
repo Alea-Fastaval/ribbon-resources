@@ -54,19 +54,22 @@ class Admin {
     );
     overview_tab.append(count_table);
 
-    let export_button = $(`<button class="button export-button">${pt.export_link}</button>`);
-    export_button.on('click', () => {
-      export_button.prop('disabled', true);
-      export_button.html('');
-      export_button.addClass('busy');
-      
+    let export_text = $(`<p></p>`);
+    let download_button =  $(`<div class="button dialog-button">${pt.export_download}</div>`);
+    let create_button =  $(`<div class="button dialog-button">${pt.export_create}</div>`);
+    let export_alert = Render.alert(pt.export_link, export_text, [download_button, create_button]);
+    overview_tab.append(export_alert);
+    
+    download_button.on('click', () => {
+      export_alert.close();
+      window.open('/public/export/export.pdf','_blank');
+    });
+
+    create_button.on('click', () => {
+      export_alert.close()
       $.ajax({
         url: "api/export",
         success: function(data, status) {
-          export_button.removeClass('busy');
-          export_button.html(pt.export_link);
-          export_button.prop('disabled', false);
-          
           if (data.status != 'success') {
             console.log('Export result', data);
             alert(pt.export_error);
@@ -75,14 +78,30 @@ class Admin {
 
           window.open(data.download_file,'_blank');
         },
-        error: function() {
-          export_button.removeClass('busy');
-          export_button.html(pt.export_link);
-          export_button.prop('disabled', false);
-
-          alert(pt.export_error);
-        },
         timeout: 3*60*1000
+      })
+    });
+
+    let export_button = $(`<button class="button export-button">${pt.export_link}</button>`);
+    export_button.on('click', () => {
+      $.ajax({
+        url: "api/export/time",
+        success: function(data, status) {
+          if (data.status != 'success') {
+            console.log('Export time result', data);
+            export_text.html(pt.export_time_error);
+            export_alert.open()
+            return;
+          }
+          export_text.html(
+            `${pt.export_text1} ${Math.floor(data.file_age_minutes)} ${pt.export_text2}`
+          );
+          export_alert.open();
+        },
+        error: function() {
+          export_text.html(pt.export_time_error);
+          export_alert.open()
+        }
       })
     })
     overview_tab.append(export_button);
