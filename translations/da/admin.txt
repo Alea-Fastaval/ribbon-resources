@@ -17,6 +17,9 @@ accounts Antal brugere der har være logget ind
 orders Antal brugere der har tilføjet mindst én sild
 closed Antal brugere der har angivet deres sildesalat er færdig
 
+#buttons
+closed_checkbox Tilmeldingen er lukket
+
 #Attributes
 name_da Dansk navn
 name_en Engelsk navn
@@ -51,6 +54,7 @@ da Dansk
 en Engelsk
 
 #Errors
+general_error Der skete en fejl under kommunikationen med serveren. Du kan eventuelt prøve igen senere eller lige hive fat i Mikkel der står for sildemaskinen.
 resource_load_failed Kunne ikke hente {} fra serveren
 ribbon_submit_error Der skete en fejl under upload af sild
 ribbon_delete_error Der skete en fejl under sletning af sild
@@ -59,4 +63,5 @@ glyph_elements_error Kunne ikke parse elementerne i glyphen
 glyph_upload_error Glyphen kunne ikke uploades
 export_error Der skete en fejl under export til PDF
 export_time_error Kunne ikke finde en eksisterende eksport-fil.<br>Vil du oprette en ny?
+
 

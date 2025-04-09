@@ -6,6 +6,7 @@ $(function() {
     categories: {},
     ribbons: {},
     orders: {},
+    options: {},
     translations: {
       _sub_list: true,
       page: {
@@ -38,6 +39,14 @@ class UserPage {
     let pt = Ribbon.translations.page;
     let gt = Ribbon.translations.general;
     let settings = Ribbon.orders.settings ?? {}
+
+    //-------------------------------------------
+    // Notice Section
+    //-------------------------------------------
+    if (Ribbon.options.show_closed_message == 'true') {
+      let waning = $(`<h2 class="warning">${pt.closed_message}</h2>`)
+      waning.insertAfter($('.main-content h1'))
+    }
 
     //-------------------------------------------
     // Preview Section

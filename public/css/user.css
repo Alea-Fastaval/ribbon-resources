@@ -1,3 +1,10 @@
+.warning {
+  width: 80%;
+  margin: auto;
+  text-align: center;
+  color: red;
+}
+
 .preview-text-wrapper,
 #preview-section .preview-content > .explanation-text {
   display: inline-block;

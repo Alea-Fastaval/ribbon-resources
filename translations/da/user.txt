@@ -1,3 +1,5 @@
+closed_message !! Sildetilmeldingn er lukket for i år !!<br>Alle sildesalater er printet og ændringer du laver fra nu af vil ikke komme med på din sildesalat.
+
 #Preview section
 preview Forhåndsvisning
 width Hvor bred skal din sildesalat være?

@@ -6,6 +6,7 @@ $(function() {
     categories: {},
     ribbons: {},
     orders: {},
+    options:{},
     translations: {
       _sub_list: true,
       page: {
@@ -111,6 +112,36 @@ class Admin {
     //-------------------------------------------
     let settings_tab = $('<div class="tab" id="settings-tab"></div>');
     main_element.append(settings_tab);
+
+    let closed_status_label = $(`<label for="signup-closed-checkbox">${pt.closed_checkbox}</label>`)
+    settings_tab.append(closed_status_label)
+
+    let closed_status_checkbox = $(`<input type="checkbox" id="signup-closed-checkbox">`)
+    closed_status_checkbox.prop('checked', Ribbon.options.show_closed_message == 'true')
+    settings_tab.append(closed_status_checkbox)
+
+    closed_status_checkbox.on("click", () => {
+      let status = closed_status_checkbox.prop('checked')
+      $.ajax({
+        url: "api/options",
+        method: "POST",
+        data: {
+          name: "show_closed_message",
+          value: status,
+        },
+        success: function(data, status) {
+          if (data.status != 'success') {
+            console.log('Error setting option', data);
+            alert(pt.general_error)
+            return;
+          }
+        },
+        error: function() {
+          alert(pt.general_error)
+        }
+      })
+    })
+
 
     //-------------------------------------------
     // Glyph Selection Dialog
