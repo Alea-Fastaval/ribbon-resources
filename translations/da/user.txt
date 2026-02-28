@@ -1,5 +1,12 @@
 closed_message !! Sildetilmeldingn er lukket for i år !!<br>Alle sildesalater er printet og ændringer du laver fra nu af vil ikke komme med på din sildesalat.
 
+#Reset section
+reset Start forfra
+reset_confirm Er du sikker på at du vil slette din sildesalat?\n(Du kan stadig kopiere en eventuel sildesalat fra tidligere år)
+clean Det ligner at du har lavet sildesalat før, vil du hente den nyeste version fra et tidligere år eller vil du hellere starte helt forfra?
+earlier_year Kopiér sildesalat fra 
+blank Start en helt ny sildesalat
+
 #Preview section
 preview Forhåndsvisning
 width Hvor bred skal din sildesalat være?
@@ -19,6 +26,8 @@ leader Områdeleder
 total I alt
 
 #error
+ribbon_reset_error Der skete en fejl under nulstilling af sildesalat
+ribbon_copy_error Der skete en fejl under kopiering af sildesalat
 ribbon_submit_error Der skete en fejl under registrering af sild
 ribbon_delete_error Der skete en fejl under sletning af sild
 ribbon_move_error Der skete en fejl under flytning af sild

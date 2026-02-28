@@ -5,6 +5,17 @@
   color: red;
 }
 
+#reset-section {
+  width: 60%;
+  margin: auto;
+  text-align: center;
+}
+
+#reset-section .action-button {
+  display: block;
+  width: 100%;
+}
+
 .preview-text-wrapper,
 #preview-section .preview-content > .explanation-text {
   display: inline-block;

@@ -94,20 +94,6 @@ nav {
   display: flex;
 }
 
-.action-button {
-  display: inline-block;
-
-  margin-bottom: 1rem;
-
-  padding: .5rem 1rem;
-
-  font-size: 1.2rem;
-  font-weight: bold;
-
-  background-color: var(--highlight-color);
-  border-radius: var(--rounding);
-}
-
 .dialog-wrapper.closed {
   display: none;
 }

@@ -74,6 +74,21 @@ h1 {
   text-align: center;
 }
 
+.action-button {
+  display: inline-block;
+  cursor: pointer;
+
+  margin-bottom: 1rem;
+
+  padding: .5rem 1rem;
+
+  font-size: 1.2rem;
+  font-weight: bold;
+
+  background-color: var(--highlight-color);
+  border-radius: var(--rounding);
+}
+
 .folding-section-header,
 .dummy-header {
   display: flex;

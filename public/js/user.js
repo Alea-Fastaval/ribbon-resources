@@ -49,10 +49,40 @@ class UserPage {
     }
 
     //-------------------------------------------
+    // Reset section
+    //-------------------------------------------
+    let reset_section = $('#reset-section')
+    let clean_section = $('<div id="clean-section"></div>')
+    reset_section.append(clean_section)
+    
+    let copy_text = $(`<p>${pt.clean}</p>`)
+    clean_section.append(copy_text)
+
+    let copy_button = $(`<div class="action-button">${pt.earlier_year} ${Ribbon.orders.settings.latest_year}</div>`)
+    copy_button.on('click', () => { UserPage.copy_order(Ribbon.orders.settings.latest_user)})
+    clean_section.append(copy_button)
+
+    let skip_button = $(`<div class="action-button">${pt.blank}</div>`)
+    skip_button.on('click', () => { UserPage.skip_copy()})
+    clean_section.append(skip_button)
+
+    let reset_button = $(`<div id="reset-button" class="action-button">${pt.reset}</div>`)
+    reset_button.on('click', () => { UserPage.reset_order()})
+    reset_section.append(reset_button)
+
+    if (Ribbon.orders.settings.status == "clean" && Ribbon.orders.settings.latest_user) {
+      clean_section.show()
+      reset_button.hide()
+    } else {
+      clean_section.hide()
+      reset_button.show()
+    }
+
+    //-------------------------------------------
     // Preview Section
     //-------------------------------------------
     UserPage.preview_section = $('#preview-section');
-    UserPage.preview_section.append(`<h3>${Ribbon.translations.page.preview}:</h3>`);
+    UserPage.preview_section.append(`<h3>${pt.preview}:</h3>`);
 
     // Content section for positioning
     let preview_content1 = $('<div class="preview-content"></div>');
@@ -62,8 +92,8 @@ class UserPage {
     let text_wrapper = $('<div class="preview-text-wrapper"></div>');
     preview_content1.append(text_wrapper);
 
-    text_wrapper.append(`<p class="explanation-text">${Ribbon.translations.page.width}</p>`);
-    text_wrapper.append(`<p class="explanation-text">${Ribbon.translations.page.sorting}</p>`);
+    text_wrapper.append(`<p class="explanation-text">${pt.width}</p>`);
+    text_wrapper.append(`<p class="explanation-text">${pt.sorting}</p>`);
 
     // GUI elements wrapper
     let preview_wrapper = $('<div class="ribbon-preview-wrapper"></div>');
@@ -94,7 +124,7 @@ class UserPage {
     UserPage.preview_section.append(preview_content2);
 
     // Bottom explanation text
-    preview_content2.append(`<p class="explanation-text">${Ribbon.translations.page.lock}</p>`);
+    preview_content2.append(`<p class="explanation-text">${pt.lock}</p>`);
 
     let preview_wrapper2 = $('<div class="ribbon-preview-wrapper"></div>');
     preview_content2.append(preview_wrapper2);
@@ -116,8 +146,8 @@ class UserPage {
     // Selection Section
     //-------------------------------------------
     UserPage.selection_section = $('#selection-section');
-    UserPage.selection_section.append(`<h3>${Ribbon.translations.page.selection_header}:</h3>`);
-    UserPage.selection_section.append(`<p class="ribbon-explanation">${Ribbon.translations.page.explanation}</p>`);
+    UserPage.selection_section.append(`<h3>${pt.selection_header}:</h3>`);
+    UserPage.selection_section.append(`<p class="ribbon-explanation">${pt.explanation}</p>`);
 
     //-------------------------------------------
     // Render Categories
@@ -250,6 +280,77 @@ class UserPage {
         }
       }
     }
+  }
+
+  static copy_order(user_id) {
+    $.ajax({
+      url: '/api/orders/copy',
+      method: 'POST',
+      data: {
+        user_id
+      },
+      success: function(result, status) {
+        if (result.status != "success") {
+          let text = Ribbon.translations.page.ribbon_copy_error;
+          if (result.message) {
+            text += "\n"+message;
+          }
+          alert(text);
+          console.log("Error copying ribbon order:", result)
+          return;
+        }
+        
+        window.location = window.location.href;
+      },
+      error: function(jqXHR) {
+        let text = Ribbon.translations.page.ribbon_copy_error;
+        if (jqXHR.responseText) {
+          let response = JSON.parse(jqXHR.responseText)
+          if (response && response.message) {
+            text += "\n" + response.message;
+          }
+        }
+        alert(text);
+      }
+    })
+  }
+
+  static skip_copy() {
+    $('#clean-section').hide()
+    $('#reset-button').show()
+    UserPage.set_status('open')
+  }
+
+  static reset_order() {
+    if (!confirm(Ribbon.translations.page.reset_confirm)) return
+
+    $.ajax({
+      url: '/api/orders',
+      method: 'DELETE',
+      success: function(result, status) {
+        if (result.status != "success") {
+          let text = Ribbon.translations.page.ribbon_reset_error;
+          if (result.message) {
+            text += "\n"+message;
+          }
+          alert(text);
+          console.log("Error resetting ribbon order:", result)
+          return;
+        }
+
+        window.location = window.location.href;
+      },
+      error: function(jqXHR) {
+        let text = Ribbon.translations.page.ribbon_reset_error;
+        if (jqXHR.responseText) {
+          let response = JSON.parse(jqXHR.responseText)
+          if (response && response.message) {
+            text += "\n" + response.message;
+          }
+        }
+        alert(text);
+      }
+    })
   }
 
   static submit_order(ribbon_id) {
