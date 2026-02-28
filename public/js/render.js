@@ -253,7 +253,7 @@ class Render {
     let ribbon_element = $(
     `<div class="ribbon-wrapper" ribbon-id="${info.ID}">
       <div class="ribbon-info"><div class="info-text">${info.desc}</div></div>
-      <div class="ribbon"><img src="/api/ribbons/svg/${info.ID}?v=${Ribbon.rv}"></div>
+      <div class="ribbon" ribbon-id="${info.ID}"><img src="/api/ribbons/svg/${info.ID}?v=${Ribbon.rv}"></div>
       <div class="ribbon-label">${info.name}</div>
     </div>`);
 
