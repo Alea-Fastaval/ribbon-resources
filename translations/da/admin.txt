@@ -19,6 +19,11 @@ closed Antal brugere der har angivet deres sildesalat er færdig
 
 #buttons
 closed_checkbox Tilmeldingen er lukket
+hide Skjul
+show Vis
+edit Ret
+retire Udgået
+unretire Genindfør
 
 #Attributes
 name_da Dansk navn
@@ -48,6 +53,7 @@ description Beskrivelse
 select_glyph Vælg glyph
 no_wings Kun menige
 confirm_delete_ribbon Er du sikker på at du vil slette silden:
+ribbon_info Sildeinformation
 
 #Languages
 da Dansk

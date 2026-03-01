@@ -135,6 +135,22 @@ h1 {
   margin: 0 1rem;
 }
 
+.ribbon-list {
+  display: grid;
+  row-gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.ribbon-list > div {
+  justify-self: center;
+}
+
+.ribbon-list .ribbon-wrapper {
+  justify-self: left;
+  margin: 0;
+  grid-column: 1;
+}
+
 .ribbon-wrapper {
   gap: .5rem;
   display: flex;

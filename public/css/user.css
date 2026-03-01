@@ -68,21 +68,6 @@
   margin: 0 auto 2rem auto;
 }
 
-.ribbon-list {
-  display: grid;
-  row-gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.ribbon-list > div {
-  justify-self: center;
-}
-
-.ribbon-list .ribbon-wrapper {
-  justify-self: left;
-  margin: 0;
-}
-
 .ribbon-list .number-dial-wrapper {
   margin-left: 1.5rem;
 }

@@ -208,7 +208,7 @@ class Admin {
       ribbon_list.append(new_ribbon_button);
 
       new_ribbon_button.on('click', () => {
-        let new_ribbon = Admin.new_ribbon_element(cat_index);
+        let new_ribbon = Admin.new_ribbon_dialog(category.ID);
         new_ribbon_button.after(new_ribbon);
       })
 
@@ -221,19 +221,43 @@ class Admin {
         let ribbon_element = Render.ribbon(ribbon);
         ribbon_list.append(ribbon_element);
 
+        // Edit button
+        let edit_button = $(`<button class="ribbon-edit-button">${pt.edit}</button>`);
+        ribbon_element.after(edit_button);
+        edit_button.on('click', () => {
+          Admin.edit_ribbon(edit_button);
+        })
+
+        let retire_button
+        if (!ribbon.Retired) {
+          // Retire button
+          retire_button = $(`<button class="ribbon-retire-button">${pt.retire}</button>`);
+          edit_button.after(retire_button);
+          retire_button.on('click', () => {
+            Admin.retire_ribbon(ribbon_element, retire_button);
+          })
+        } else {
+          // Retire button
+          retire_button = $(`<button class="ribbon-unretire-button">${pt.unretire}</button>`);
+          edit_button.after(retire_button);
+          retire_button.on('click', () => {
+            Admin.unretire_ribbon(ribbon_element, retire_button);
+          })
+        }
+        
         if (!ribbon.Hidden) {
           // Delete button
-          let delete_button = $(`<button class="ribbon-delete-button">${gt.hide}</button>`);
-          ribbon_element.append(delete_button);
+          let delete_button = $(`<button class="ribbon-delete-button">${pt.hide}</button>`);
+          retire_button.after(delete_button);
           delete_button.on('click', () => {
-            Admin.delete_ribbon(ribbon_element);
+            Admin.delete_ribbon(delete_button);
           })
         } else {
           // Show button
-          let show_button = $(`<button class="ribbon-show-button">${gt.show}</button>`);
-          ribbon_element.append(show_button);
+          let show_button = $(`<button class="ribbon-show-button">${pt.show}</button>`);
+          retire_button.after(show_button);
           show_button.on('click', () => {
-            Admin.show_ribbon(ribbon_element);
+            Admin.show_ribbon(show_button);
           })
         }
 
@@ -368,7 +392,7 @@ class Admin {
    * using the data provided
    * @returns jQerry element
    */
-  static new_ribbon_element(cat_index, info = {}) {
+  static new_ribbon_dialog(cat_id, info = {}) {
     let gt = Ribbon.translations.general;
     let pt = Ribbon.translations.page;
 
@@ -378,14 +402,14 @@ class Admin {
     info.glyph_id ??= 0;
     info.no_wings ??= false;
 
-    let element = $(`<div class="ribbon-info"></div>`);
+    let element = $(`<div class="ribbon-info-dialog"></div>`);
     if (info.id == 'new') element.addClass('new');
     element.attr('ribbon-id', info.id);
 
     let element_content = $(`<div class="ribbon-info-content"></div>`);
     element.append(element_content);
 
-    let glyph_selector = Admin.new_glyph_selector(info.glyph_id, cat_index);
+    let glyph_selector = Admin.new_glyph_selector(info.glyph_id, cat_id);
     element_content.append(glyph_selector);
 
     glyph_selector.on('click', () => {
@@ -421,7 +445,10 @@ class Admin {
       element_content.append(`<input class="col2" type="text" value="${info.name[lang] ?? ""}" id="name-${info.id}-${lang}" />`);
       element_content.append(`<input class="col3" type="text" value="${info.description[lang] ?? ""}" id="desc-${info.id}-${lang}" />`);
     }
-    
+
+    // Instead of tracking changes we just always show the buttons
+    element.addClass('changed')
+
     let button_wrapper = $(`<div class="button-wrapper dialog-footer"></div>`);
     element.append(button_wrapper);
 
@@ -449,26 +476,26 @@ class Admin {
    */
   static submit_ribbon(element) {
     let data = {};
-    let id = element.attr('ribbon-id');
 
+    data.id = element.attr('ribbon-id');
     data.category = element.parents(".category").attr('cat-id');
     data.glyph = element.find(".glyph-selector").attr('glyph-id');
-    data.no_wings = element.find(`#no-wings-${id}`).prop('checked');
+    data.no_wings = element.find(`#no-wings-${data.id}`).prop('checked');
 
     for (const lang of Ribbon.translations.languages) {
-      data[`name_${lang}`] = element.find(`#name-${id}-${lang}`).val();
-      data[`desc_${lang}`] = element.find(`#desc-${id}-${lang}`).val();
+      data[`name_${lang}`] = element.find(`#name-${data.id}-${lang}`).val();
+      data[`desc_${lang}`] = element.find(`#desc-${data.id}-${lang}`).val();
     }
 
     let name = data["name_"+page_info.lang];
     let desc = data["desc_"+page_info.lang];
 
-    if (id == 'new') {
+    if (data.id == 'new') {
       $.ajax({
         url: '/api/ribbons',
         method: 'POST',
         data,
-        success: function(data, status) {
+        success: function(data) {
           if (data.status == "error") {
             alert(Ribbon.translations.page.ribbon_submit_error)
             return;
@@ -489,27 +516,125 @@ class Admin {
             name,
           }
 
+          let pt = Ribbon.translations.page
+          // Edit button
+          let edit_button = $(`<button class="ribbon-edit-button">${pt.edit}</button>`);
+          ribbon_element.after(edit_button);
+          edit_button.on('click', () => {
+            Admin.edit_ribbon(edit_button);
+          })
+
+          // Retire button
+          let retire_button = $(`<button class="ribbon-retire-button">${pt.retire}</button>`);
+          edit_button.after(retire_button);
+          retire_button.on('click', () => {
+            Admin.retire_ribbon(ribbon_element, retire_button);
+          })
+
           // Delete button
-          let gt = Ribbon.translations.general
-          let delete_button = $(`<button class="ribbon-delete-button">${gt.hide}</button>`);
-          ribbon_element.append(delete_button);
+          let delete_button = $(`<button class="ribbon-delete-button">${pt.hide}</button>`);
+          retire_button.after(delete_button);
           delete_button.on('click', () => {
-            Admin.delete_ribbon(ribbon_element);
+            Admin.delete_ribbon(delete_button);
           })
         },
         error: function() {
           alert(Ribbon.translations.page.ribbon_submit_error)
         }
-      })   
+      })
+      return
     }
+
+    $.ajax({
+      url: '/api/ribbons',
+      method: 'PATCH',
+      data,
+      success: function(data) {
+        if (data.status == "error") {
+          alert(Ribbon.translations.page.ribbon_submit_error)
+          return;
+        }
+        
+        // Remove edit dialog
+        element.remove()
+
+        // Update ribbon
+        data.name = name;
+        data.desc = desc;
+        let new_ribbon = Render.ribbon(data);
+        let old_ribbon = Admin.categories_content.find(`.ribbon-wrapper[ribbon-id=${data.ID}]`)
+        old_ribbon.after(new_ribbon)
+        old_ribbon.remove()
+
+        // Update translations
+        Ribbon.translations.ribbons[data.ID] = {
+          desc,
+          name,
+        }
+      },
+      error: function() {
+        alert(Ribbon.translations.page.ribbon_submit_error)
+      }
+    })
   }
 
   /**
    * Delete a ribbon element
    */
-  static delete_ribbon(element) {
-    let gt = Ribbon.translations.general;
-    let ribbon_id = element.attr('ribbon-id');
+  static edit_ribbon(button) {
+    let ribbon = button
+    while (!ribbon.is(".ribbon-wrapper")) {
+      ribbon = ribbon.prev()
+    }
+
+    let pt = Ribbon.translations.page
+    let ribbon_id = ribbon.attr('ribbon-id');
+
+    $.ajax({
+      url: 'api/ribbons/'+ribbon_id,
+      method: 'GET',
+      success: function(data, status) {
+        if (data.status == "error") {
+          alert(pt.resource_load_failed.replace("{}", pt.ribbon_info))
+          return;
+        }
+
+        Admin.show_edit_dialog(ribbon, data)
+      },
+      error: function() {
+        alert(pt.resource_load_failed.replace("{}", pt.ribbon_info))
+      }
+    })
+  }
+
+  static show_edit_dialog(element, data) {
+    let info = {}
+    info.id = data.ribbon.ID
+    info.glyph_id = data.ribbon.Glyph
+    info.no_wings = data.ribbon.NoWings
+    info.name = []
+    info.description = []
+
+    for (const lang of Ribbon.translations.languages) {
+      info.name[lang] = data.text[lang].name
+      info.description[lang] = data.text[lang].desc
+    }
+
+    let dialog = Admin.new_ribbon_dialog(data.ribbon.Category, info)
+    element.nextUntil(".ribbon-wrapper").last().after(dialog)
+  }
+
+  /**
+   * Delete a ribbon element
+   */
+  static delete_ribbon(button) {
+    let ribbon = button
+    while (!ribbon.is(".ribbon-wrapper")) {
+      ribbon = ribbon.prev()
+    }
+
+    let pt = Ribbon.translations.page;
+    let ribbon_id = ribbon.attr('ribbon-id');
 
     $.ajax({
       url: '/api/ribbons/'+ribbon_id,
@@ -520,14 +645,13 @@ class Admin {
           return;
         }
         
-        element.addClass('deleted')
-        let show_button = $(`<button class="ribbon-show-button">${gt.show}</button>`);
-        let delete_button = element.find('.ribbon-delete-button')
-        delete_button.after(show_button)
-        delete_button.remove()
+        ribbon.addClass('deleted')
+        let show_button = $(`<button class="ribbon-show-button">${pt.show}</button>`);
+        button.after(show_button)
+        button.remove()
 
         show_button.on('click', () => {
-          Admin.show_ribbon(element);
+          Admin.show_ribbon(show_button);
         })
         
       },
@@ -540,9 +664,14 @@ class Admin {
   /**
    * Show ribbon element again
    */
-  static show_ribbon(element) {
-    let gt = Ribbon.translations.general;
-    let ribbon_id = element.attr('ribbon-id');
+  static show_ribbon(button) {
+    let ribbon = button
+    while (!ribbon.is(".ribbon-wrapper")) {
+      ribbon = ribbon.prev()
+    }
+
+    let pt = Ribbon.translations.page;
+    let ribbon_id = ribbon.attr('ribbon-id');
 
     $.ajax({
       url: '/api/ribbons/show/'+ribbon_id,
@@ -553,14 +682,13 @@ class Admin {
           return;
         }
         
-        element.removeClass('deleted')
-        let delete_button = $(`<button class="ribbon-delete-button">${gt.hide}</button>`);
-        let show_button = element.find('.ribbon-show-button')
-        show_button.after(delete_button)
-        show_button.remove()
+        ribbon.removeClass('deleted')
+        let delete_button = $(`<button class="ribbon-delete-button">${pt.hide}</button>`);
+        button.after(delete_button)
+        button.remove()
 
         delete_button.on('click', () => {
-          Admin.delete_ribbon(element);
+          Admin.delete_ribbon(delete_button);
         })
       },
       error: function() {
@@ -573,16 +701,17 @@ class Admin {
    * Creates a glyph selector GUI element
    * @returns jQerry element
    */
-  static new_glyph_selector(glyph_id, cat_index) {
+  static new_glyph_selector(glyph_id, cat_id) {
     let pt = Ribbon.translations.page;
 
-    let fg = encodeURIComponent(Ribbon.categories[cat_index].Glyph);
-    let bg = encodeURIComponent(Ribbon.categories[cat_index].Background);
+    let fg = encodeURIComponent(Ribbon.category_by_id[cat_id].Glyph);
+    let bg = encodeURIComponent(Ribbon.category_by_id[cat_id].Background);
 
     let element = $(`<div class="glyph-selector glyph-wrapper" fg="${fg}" bg="${bg}"></div>`);
 
     if (glyph_id) {
       element.append(`<img src="/api/glyphs/${glyph_id}?fg=${fg}&bg=${bg}"/>`)
+      element.attr('glyph-id', glyph_id)
     } else {
       element.append(`<div class="placeholder">${pt.select_glyph}</div>`)
     }

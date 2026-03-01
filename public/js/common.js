@@ -8,8 +8,6 @@ class Ribbon {
   static translations = {}
   static category_by_id = {}
 
-  static rv = 1 // Ribbon version for cache
-
   static init() {
     $('#explanation-link-wrapper a').on('click', (evt) => {
       evt.preventDefault();

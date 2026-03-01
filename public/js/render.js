@@ -243,6 +243,8 @@ class Render {
 
     new_category.addClass('category');
 
+    new_category.find(".folding-section-content").addClass('ribbon-list');
+
     return new_category;
   }
 
@@ -254,7 +256,7 @@ class Render {
     let ribbon_element = $(
     `<div class="ribbon-wrapper ${deleted}" ribbon-id="${info.ID}">
       <div class="ribbon-info"><div class="info-text">${info.desc}</div></div>
-      <div class="ribbon" ribbon-id="${info.ID}"><img src="/api/ribbons/svg/${info.ID}?v=${Ribbon.rv}"></div>
+      <div class="ribbon" ribbon-id="${info.ID}"><img src="/api/ribbons/svg/${info.ID}?v=${Math.random()}"></div>
       <div class="ribbon-label">${info.name}</div>
     </div>`);
 
@@ -332,7 +334,7 @@ class Render {
       }
     }
 
-    let img_src = `/api/ribbons/svg/${ribbon.ID}?seniority=${years}&v=${Ribbon.rv}` + extra_params;
+    let img_src = `/api/ribbons/svg/${ribbon.ID}?seniority=${years}&v=${Math.random()}` + extra_params;
     return $(`<div class="ribbon" ribbon-id="${ribbon.ID}"><img draggable="false" src="${img_src}"></div>`);
   }
 }

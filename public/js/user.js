@@ -159,8 +159,6 @@ class UserPage {
       UserPage.selection_section.append(category_element);  
 
       let ribbon_list = category_element.find(".folding-section-content");
-      ribbon_list.addClass('ribbon-list');
-
 
       let header_texts = [
         'grunt',
@@ -195,7 +193,6 @@ class UserPage {
         ribbon.name = Ribbon.translations.ribbons[ribbon.ID].name;
         ribbon.desc = Ribbon.translations.ribbons[ribbon.ID].desc;
         let ribbon_element = Render.ribbon(ribbon);
-        ribbon_element.css('grid-column', 1);
         ribbon_list.append(ribbon_element);
 
         function update_list_preview(values) {

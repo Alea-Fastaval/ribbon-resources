@@ -16,8 +16,6 @@ ok OK
 save Gem
 cancel Annuller
 delete Slet
-hide Skjul
-show Vis
 
 #Login dialog
 user_name Bruger ID

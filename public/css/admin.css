@@ -61,11 +61,28 @@ nav {
   margin-bottom: 1rem;
 }
 
+.ribbon-list {
+  column-gap: .5rem;
+}
+
+.ribbon-list .dummy-header {
+  grid-column-start: 1;
+  grid-column-end: 10;
+
+  box-sizing: border-box;
+  width: 100%;
+}
+
 .ribbon-wrapper.deleted img {
   opacity: 50%;
 }
 
-.ribbon-info {
+.ribbon-list .ribbon-info-dialog {
+  grid-column-start: 1;
+  grid-column-end: 10;
+}
+
+.ribbon-info-dialog {
   margin-bottom: 1rem;
 }
 
@@ -89,15 +106,36 @@ nav {
   margin: .5rem 1rem;
 }
 
-.ribbon-info .button-wrapper {
+.ribbon-info-dialog .button-wrapper {
   display: none;
 }
 
-.ribbon-info.new .button-wrapper,
-.ribbon-info.changed .button-wrapper {
+.ribbon-info-dialog.new .button-wrapper,
+.ribbon-info-dialog.changed .button-wrapper {
   display: flex;
 }
 
+.ribbon-list button {
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background-color: var(--highlight-color);
+  border-radius: var(--rounding);
+}
+
+.ribbon-list .ribbon-edit-button {
+  grid-column: 2;
+}
+
+.ribbon-list .ribbon-retire-button,
+.ribbon-list .ribbon-unretire-button {
+  grid-column: 3;
+}
+
+.ribbon-list .ribbon-delete-button,
+.ribbon-list .ribbon-show-button {
+  grid-column: 4;
+}
 .dialog-wrapper.closed {
   display: none;
 }
