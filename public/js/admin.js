@@ -442,8 +442,8 @@ class Admin {
 
     for (const lang of Ribbon.translations.languages) {
       element_content.append(`<div class="label col1">${pt[lang]}</div>`);
-      element_content.append(`<input class="col2" type="text" value="${info.name[lang] ?? ""}" id="name-${info.id}-${lang}" />`);
-      element_content.append(`<input class="col3" type="text" value="${info.description[lang] ?? ""}" id="desc-${info.id}-${lang}" />`);
+      element_content.append(`<input class="col2 name" type="text" value="${info.name[lang] ?? ""}" id="name-${info.id}-${lang}" />`);
+      element_content.append(`<input class="col3 desc" type="text" value="${info.description[lang] ?? ""}" id="desc-${info.id}-${lang}" />`);
     }
 
     // Instead of tracking changes we just always show the buttons
