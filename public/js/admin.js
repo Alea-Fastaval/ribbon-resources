@@ -221,12 +221,22 @@ class Admin {
         let ribbon_element = Render.ribbon(ribbon);
         ribbon_list.append(ribbon_element);
 
-        // Delete button
-        let delete_button = $(`<button class"ribbon-delete-button">${gt.delete}</button>`);
-        ribbon_element.append(delete_button);
-        delete_button.on('click', () => {
-          Admin.delete_ribbon(ribbon_element);
-        })
+        if (!ribbon.Hidden) {
+          // Delete button
+          let delete_button = $(`<button class="ribbon-delete-button">${gt.hide}</button>`);
+          ribbon_element.append(delete_button);
+          delete_button.on('click', () => {
+            Admin.delete_ribbon(ribbon_element);
+          })
+        } else {
+          // Show button
+          let show_button = $(`<button class="ribbon-show-button">${gt.show}</button>`);
+          ribbon_element.append(show_button);
+          show_button.on('click', () => {
+            Admin.show_ribbon(ribbon_element);
+          })
+        }
+
       }
     }
 
@@ -481,7 +491,7 @@ class Admin {
 
           // Delete button
           let gt = Ribbon.translations.general
-          let delete_button = $(`<button class"ribbon-delete-button">${gt.delete}</button>`);
+          let delete_button = $(`<button class="ribbon-delete-button">${gt.hide}</button>`);
           ribbon_element.append(delete_button);
           delete_button.on('click', () => {
             Admin.delete_ribbon(ribbon_element);
@@ -498,12 +508,8 @@ class Admin {
    * Delete a ribbon element
    */
   static delete_ribbon(element) {
-    let pt = Ribbon.translations.page;
-    let rt = Ribbon.translations.ribbons;
-    
+    let gt = Ribbon.translations.general;
     let ribbon_id = element.attr('ribbon-id');
-    let text = `${pt.confirm_delete_ribbon} ${rt[ribbon_id].name}, ${rt[ribbon_id].desc} ?`
-    if (!confirm(text)) return
 
     $.ajax({
       url: '/api/ribbons/'+ribbon_id,
@@ -514,10 +520,51 @@ class Admin {
           return;
         }
         
-        element.remove()
+        element.addClass('deleted')
+        let show_button = $(`<button class="ribbon-show-button">${gt.show}</button>`);
+        let delete_button = element.find('.ribbon-delete-button')
+        delete_button.after(show_button)
+        delete_button.remove()
+
+        show_button.on('click', () => {
+          Admin.show_ribbon(element);
+        })
+        
       },
       error: function() {
         alert(Ribbon.translations.page.ribbon_delete_error)
+      }
+    })   
+  }
+
+  /**
+   * Show ribbon element again
+   */
+  static show_ribbon(element) {
+    let gt = Ribbon.translations.general;
+    let ribbon_id = element.attr('ribbon-id');
+
+    $.ajax({
+      url: '/api/ribbons/show/'+ribbon_id,
+      method: 'POST',
+      success: function(data, status) {
+        if (data.status == "error") {
+          alert(Ribbon.translations.page.ribbon_show_error)
+          return;
+        }
+        
+        element.removeClass('deleted')
+        let delete_button = $(`<button class="ribbon-delete-button">${gt.hide}</button>`);
+        let show_button = element.find('.ribbon-show-button')
+        show_button.after(delete_button)
+        show_button.remove()
+
+        delete_button.on('click', () => {
+          Admin.delete_ribbon(element);
+        })
+      },
+      error: function() {
+        alert(Ribbon.translations.page.ribbon_show_error)
       }
     })   
   }

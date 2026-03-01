@@ -57,7 +57,8 @@ en Engelsk
 general_error Der skete en fejl under kommunikationen med serveren. Du kan eventuelt prøve igen senere eller lige hive fat i Mikkel der står for sildemaskinen.
 resource_load_failed Kunne ikke hente {} fra serveren
 ribbon_submit_error Der skete en fejl under upload af sild
-ribbon_delete_error Der skete en fejl under sletning af sild
+ribbon_delete_error Der skete en fejl under fjerning af sild
+ribbon_show_error Der skete en fejl ved forsøg på at vise sild igen
 read_glyph_error Kunne ikke læse indholdet af glyph filen
 glyph_elements_error Kunne ikke parse elementerne i glyphen
 glyph_upload_error Glyphen kunne ikke uploades

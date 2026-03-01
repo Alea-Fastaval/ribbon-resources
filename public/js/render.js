@@ -250,8 +250,9 @@ class Render {
   // Ribbon
   //--------------------------------------------------------------------------------------------------------------------
   static ribbon(info) {
+    let deleted = info.Hidden ? "deleted" : ""
     let ribbon_element = $(
-    `<div class="ribbon-wrapper" ribbon-id="${info.ID}">
+    `<div class="ribbon-wrapper ${deleted}" ribbon-id="${info.ID}">
       <div class="ribbon-info"><div class="info-text">${info.desc}</div></div>
       <div class="ribbon" ribbon-id="${info.ID}"><img src="/api/ribbons/svg/${info.ID}?v=${Ribbon.rv}"></div>
       <div class="ribbon-label">${info.name}</div>
@@ -296,24 +297,19 @@ class Render {
   // Full ribbon display preview
   //--------------------------------------------------------------------------------------------------------------------
   static preview() {
-    let orders = Ribbon.orders.list ?? {}
+    let orders = Object.values(Ribbon.orders.list)
 
     let preview = $('<div class="ribbon-preview"></div>')
-    let order_entries = Object.entries(orders)
     
-    if (order_entries.length == 0) {
+    if (orders.length == 0) {
       preview.html(Ribbon.translations.page.no_ribbons);
       return preview;
     }
 
-    // Sort orders by position
-    let sorted = [];
-    for (const [_ ,order] of order_entries) {
-      sorted[order.position] = order;
-    }
+    orders.sort((a,b) => a.position - b.position)
 
     // Add ribbons from order
-    for (const order of sorted) {
+    for (const order of orders) {
       let ribbon_element = Render.single_preview(order);
       preview.append(ribbon_element);
     }

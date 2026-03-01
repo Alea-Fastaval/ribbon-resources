@@ -61,6 +61,10 @@ nav {
   margin-bottom: 1rem;
 }
 
+.ribbon-wrapper.deleted img {
+  opacity: 50%;
+}
+
 .ribbon-info {
   margin-bottom: 1rem;
 }

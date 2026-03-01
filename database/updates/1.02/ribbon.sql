@@ -1,0 +1,2 @@
+ALTER TABLE ribbons ADD retired BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE ribbons ADD hidden BOOLEAN NOT NULL DEFAULT false;
