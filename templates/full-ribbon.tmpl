@@ -1,5 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 250 84">
   <rect x="0" y="0" width="100%" height="100%" fill="{{ .background}}" />
+  {{- if .retired -}}
+    {{- if eq .retired.side "top"}}
+  <polygon points="0,0 250,0 250,84" style="fill:{{ .retired.color}};" />
+    {{- else }}
+  <polygon points="0,0 0,84 250,84" style="fill:{{ .retired.color}};" />
+    {{- end }}
+  {{- end }}
   {{- if .seniority}}
   <symbol id="seniority">
     {{ .seniority}}
