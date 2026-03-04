@@ -2,9 +2,9 @@
   <rect x="0" y="0" width="100%" height="100%" fill="{{ .background}}" />
   {{- if .retired -}}
     {{- if eq .retired.side "top"}}
-  <polygon points="0,0 250,0 250,84" style="fill:{{ .retired.color}};" />
+  <polygon points="0,0 250,0 250,84" style="fill:{{ .retired.color}};" opacity="0.4"/>
     {{- else }}
-  <polygon points="0,0 0,84 250,84" style="fill:{{ .retired.color}};" />
+  <polygon points="0,0 0,84 250,84" style="fill:{{ .retired.color}};" opacity="0.7"/>
     {{- end }}
   {{- end }}
   {{- if .seniority}}
