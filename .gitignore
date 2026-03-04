@@ -6,5 +6,6 @@ tmp/*
 !tmp/*/
 tmp/ribbons/*
 public/export/*
+bin/*
 
 !**/.gitkeep
