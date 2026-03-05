@@ -46,11 +46,12 @@ class Admin {
     let overview_tab = $('<div class="tab" id="overview-tab"></div>');
     main_element.append(overview_tab);
 
+    let latest = Object.keys(Ribbon.orders.list).pop();
     let count_table = $(
       `<table id="stats-table"><tbody>
-        <tr><td>${pt.accounts}</td><td>${Ribbon.orders.counts.users[2025]}</td></tr>
-        <tr><td>${pt.orders}</td><td>${Ribbon.orders.counts.orders[2025]}</td></tr>
-        <tr><td>${pt.closed}</td><td>${Ribbon.orders.counts.closed[2025]}</td></tr>
+        <tr><td>${pt.accounts}</td><td>${Ribbon.orders.counts.users[latest]}</td></tr>
+        <tr><td>${pt.orders}</td><td>${Ribbon.orders.counts.orders[latest]}</td></tr>
+        <tr><td>${pt.closed}</td><td>${Ribbon.orders.counts.closed[latest]}</td></tr>
       </tbody></table>`
     );
     overview_tab.append(count_table);
