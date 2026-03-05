@@ -454,7 +454,7 @@ class UserPage {
   static init_preview_dragging(preview) {
     UserPage.dragging = undefined
     
-    $(window).on("mouseup", () => {
+    $(window).on("mouseup touchend", () => {
       if (UserPage.dragging == undefined) return;
       UserPage.submit_move(UserPage.dragging);
       UserPage.dragging.css("opacity", "");
@@ -462,7 +462,7 @@ class UserPage {
     });
 
     let ribbons = preview.find(".ribbon");
-    ribbons.on("mousedown", (evt) => {
+    ribbons.on("mousedown touchstart", (evt) => {
       UserPage.dragging = $(evt.delegateTarget);
       UserPage.dragging.css("opacity", "50%");
       evt.preventDefault();
@@ -477,6 +477,36 @@ class UserPage {
         UserPage.dragging.insertAfter(target);
       } else {
         UserPage.dragging.insertBefore(target);
+      }
+    })
+
+    preview.on("touchmove", (evt) => {
+      if (UserPage.dragging == undefined) return;
+      evt.preventDefault()
+
+      let touch = evt.targetTouches.item(0)
+      let point = {
+        x: touch.clientX,
+        y: touch.clientY,
+      }
+
+      //console.log("Drag x:", point.x, " y:", point.y)
+
+      let hit = undefined;
+      ribbons.each((i, e) => {
+        let box = e.getBoundingClientRect()
+        if (point.x >= box.left && point.x <= box.right && point.y >= box.top && point.y <= box.bottom) {
+          hit = $(e)
+          return false
+        }
+      })
+
+      if (hit) {
+        if (hit.index() > UserPage.dragging.index()) {
+          UserPage.dragging.insertAfter(hit);
+        } else {
+          UserPage.dragging.insertBefore(hit);
+        }
       }
     })
   }
