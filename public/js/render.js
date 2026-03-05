@@ -260,6 +260,16 @@ class Render {
       <div class="ribbon-label">${info.name}</div>
     </div>`);
 
+    ribbon_element.on('touchstart', (e) => {
+      e.preventDefault()
+      ribbon_element.addClass('touching')
+    })
+
+    ribbon_element.on('touchend', (e) => {
+      e.preventDefault()
+      ribbon_element.removeClass('touching')
+    })
+
     return ribbon_element;
   }
 

@@ -172,6 +172,8 @@ h1 {
   display: none;
 }
 
+
+.ribbon-wrapper.touching .info-text,
 .ribbon-info:hover .info-text {
   position: absolute;
   bottom: 1rem;
