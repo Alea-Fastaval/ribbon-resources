@@ -279,6 +279,9 @@ nav {
 }
 
 .glyph-selector-content {
+  max-height: 80vh;
+  overflow-y: scroll;
+  
   grid-template-columns: repeat(10, 5rem);
 }
 
