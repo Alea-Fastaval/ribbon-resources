@@ -68,20 +68,41 @@ class Admin {
     });
 
     create_button.on('click', () => {
-      export_alert.close()
-      $.ajax({
-        url: "api/export",
-        success: function(data, status) {
-          if (data.status != 'success') {
-            console.log('Export result', data);
-            alert(pt.export_error);
-            return;
-          }
+      create_button.addClass('busy')
+      $.ajax({ url: "/api/export" })
 
-          window.open(data.download_file,'_blank');
-        },
-        timeout: 3*60*1000
-      })
+      let progress_bar = $(`
+        <div class="progress-bar">
+          <span class="progress-bar-text">${Ribbon.translations.page.exporting_progress}</span>
+        </div>
+      `)
+
+      export_alert.find('.dialog-content').append(progress_bar)
+
+      let progress = $('<div class="progress-bar-progress"></div>')
+      progress.css('width','0%')
+      progress_bar.append(progress)
+
+      let interval_id = setInterval(() => {
+        $.ajax({
+          url: "/api/export/progress",
+          success: function(data) {
+            let progress_amount = 0
+            if (data.total == 0) {
+              clearInterval(interval_id)
+              create_button.removeClass('busy')
+              progress_bar.remove()
+              return
+            }
+            progress_amount = data.processed / data.total * 100
+            progress.css('width',`${Math.floor(progress_amount)}%`)
+          },
+          error : function() {
+            clearInterval(interval_id)
+            create_button.removeClass('busy')
+          }
+        })
+      }, 500)
     });
 
     let export_button = $(`<button class="button export-button">${pt.export_link}</button>`);

@@ -42,6 +42,37 @@ nav {
   animation:spin 4s linear infinite;
 }
 
+.dialog-content .progress-bar {
+  border: 1px solid black;
+  position: relative;
+  display: flex;
+}
+
+.dialog-content .progress-bar .progress-bar-text{
+  margin: auto;
+  z-index: 2;
+}
+
+.dialog-content .progress-bar .progress-bar-progress {
+  position: absolute;
+  left: 0;
+  background: green;
+  height: 100%;
+}
+
+.dialog-button.busy::after {
+  display: inline-block;
+  margin-left: .5rem;
+
+  font-family: "Font Awesome 6 Free";
+  font-weight: bold;
+  content: "\f013";
+  
+  -webkit-animation:spin 4s linear infinite;
+  -moz-animation:spin 4s linear infinite;
+  animation:spin 4s linear infinite;
+}
+
 @-moz-keyframes spin { 
   100% { -moz-transform: rotate(360deg); } 
 }

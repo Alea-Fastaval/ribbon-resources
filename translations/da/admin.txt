@@ -6,9 +6,10 @@ overview_button Oversigt
 
 #export
 export_text1 Den sidste eksportfil er
-export_text2 minutter gammel.<br>Vil du hente den eller oprette en ny?<br>(Hvis du lige har trykket på opret knappen, er den måske stadig i gang med export).
+export_text2 minutter gammel.<br>Vil du hente den eller oprette en ny?
 export_create Opret Ny
 export_download Hent
+exporting_progress Eksporterer sild
 
 export_link Eksporter til PDF
 
